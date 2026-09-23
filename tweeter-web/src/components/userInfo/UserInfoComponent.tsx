@@ -168,8 +168,7 @@ const UserInfo = () => {
 
     try {
       setIsLoading(true);
-      unfollowingUserToast = displayToast(
-        ToastType.Info,
+      unfollowingUserToast = displayInfoMessage(
         `Unfollowing ${displayedUser!.name}...`,
         0,
       );
