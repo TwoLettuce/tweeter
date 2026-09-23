@@ -3,6 +3,7 @@ import { Toast, ToastType } from "./Toast";
 
 export const ToastListContext = createContext<Toast[]>([]);
 
+
 interface ToastActions {
   displayExistingToast: (toast: Toast) => void,
   displayToast: (
