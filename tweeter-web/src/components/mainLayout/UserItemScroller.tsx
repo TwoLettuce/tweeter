@@ -1,11 +1,11 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useParams } from "react-router-dom";
 import { User, AuthToken, FakeData } from "tweeter-shared";
-import { UserInfoContext } from "../userInfo/UserInfoContexts";
 import UserItem from "../userItem/UserItem";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
+import { useUserInfo } from "../userInfo/UserInfoHook";
 
 const PAGE_SIZE = 10;
 
@@ -28,7 +28,7 @@ const UserItemScroller = (props: Props) => {
   const addItems = (newItems: User[]) =>
     setItems((previousItems) => [...previousItems, ...newItems]);
 
-  const { displayedUser, authToken } = useContext(UserInfoContext);
+  const { displayedUser, authToken } = useUserInfo();
   const { setDisplayedUser } = useUserInfoActions();
   const { displayedUser: displayedUserAliasParam } = useParams();
 

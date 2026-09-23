@@ -1,12 +1,10 @@
 import "./UserInfoComponent.css";
-import { useContext } from "react";
-import { UserInfoContext } from "./UserInfoContexts";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthToken, FakeData, User } from "tweeter-shared";
-import { ToastType } from "../toaster/Toast";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfoActions } from "./UserInfoActionsHook";
+import { useUserInfo } from "./UserInfoHook";
 
 const UserInfo = () => {
   const [isFollower, setIsFollower] = useState(false);
@@ -16,7 +14,7 @@ const UserInfo = () => {
 
   const { displayInfoMessage, displayErrorMessage, deleteMessage } =
     useMessageActions();
-  const { currentUser, authToken, displayedUser } = useContext(UserInfoContext);
+  const { currentUser, authToken, displayedUser } = useUserInfo();
   const { setDisplayedUser } = useUserInfoActions();
   const navigate = useNavigate();
   const location = useLocation();
