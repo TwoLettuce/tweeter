@@ -4,28 +4,14 @@ import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useNavigate } from "react-router-dom";
 
-const { displayedUser, authToken } = useUserInfo();
-const { setDisplayedUser } = useUserInfoActions();
-const { displayErrorMessage } = useMessageActions();
-const navigate = useNavigate();
-
-const extractAlias = (value: string): string => {
-  const index = value.indexOf("@");
-  return value.substring(index);
-};
-
-const getUser = async (
-  authToken: AuthToken,
-  alias: string,
-): Promise<User | null> => {
-  // TODO: Replace with the result of calling server
-  return FakeData.instance.findUserByAlias(alias);
-};
-
 export const useUserNavigation = async (
   event: React.MouseEvent,
   featurePath: string,
 ): Promise<void> => {
+  const { displayedUser, authToken } = useUserInfo();
+  const { setDisplayedUser } = useUserInfoActions();
+  const { displayErrorMessage } = useMessageActions();
+  const navigate = useNavigate();
   event.preventDefault();
 
   try {
@@ -42,4 +28,17 @@ export const useUserNavigation = async (
   } catch (error) {
     displayErrorMessage(`Failed to get user because of exception: ${error}`);
   }
+};
+
+const extractAlias = (value: string): string => {
+  const index = value.indexOf("@");
+  return value.substring(index);
+};
+
+const getUser = async (
+  authToken: AuthToken,
+  alias: string,
+): Promise<User | null> => {
+  // TODO: Replace with the result of calling server
+  return FakeData.instance.findUserByAlias(alias);
 };
