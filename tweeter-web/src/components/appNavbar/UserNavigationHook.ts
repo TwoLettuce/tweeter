@@ -24,7 +24,7 @@ const getUser = async (
 
 export const useUserNavigation = async (
   event: React.MouseEvent,
-  featureUrl: string,
+  featurePath: string,
 ): Promise<void> => {
   event.preventDefault();
 
@@ -36,7 +36,7 @@ export const useUserNavigation = async (
     if (toUser) {
       if (!toUser.equals(displayedUser!)) {
         setDisplayedUser(toUser);
-        navigate(`${featureUrl}/${toUser.alias}`);
+        navigate(`${featurePath}/${toUser.alias}`);
       }
     }
   } catch (error) {
