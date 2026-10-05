@@ -4,16 +4,13 @@ import { FollowService } from "../../model/service/FollowService";
 import { PAGE_SIZE } from "./FolloweePresenter";
 
 export class FollowerPresenter extends UserItemPresenter {
-  private service: FollowService;
-
   public constructor(view: UserItemView) {
     super(view);
-    this.service = new FollowService();
   }
 
   public async loadMoreItems(authToken: AuthToken, userAlias: string) {
     try {
-      const [newItems, hasMore] = await this.service.loadMoreFollowers(
+      const [newItems, hasMore] = await this.followService.loadMoreFollowers(
         authToken,
         userAlias,
         PAGE_SIZE,

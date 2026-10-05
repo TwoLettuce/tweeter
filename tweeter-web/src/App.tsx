@@ -17,6 +17,9 @@ import { useUserInfo } from "./components/userInfo/UserInfoHook";
 import { UserItemView } from "./presenter/userItem/UserItemPresenter";
 import { FolloweePresenter } from "./presenter/userItem/FolloweePresenter";
 import { FollowerPresenter } from "./presenter/userItem/FollowerPresenter";
+import { FeedPresenter } from "./presenter/statusItem/FeedPresenter";
+import { StatusItemView } from "./presenter/statusItem/StatusItemPresenter";
+import { StoryPresenter } from "./presenter/statusItem/StoryPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -42,26 +45,6 @@ const App = () => {
 const AuthenticatedRoutes = () => {
   const { displayedUser } = useUserInfo();
 
-  const loadMoreFeedItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null,
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
-  const loadMoreStoryItems = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastItem: Status | null,
-  ): Promise<[Status[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
-  };
-
   return (
     <Routes>
       <Route element={<MainLayout />}>
@@ -74,9 +57,10 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={`feed-${displayedUser!.alias}`}
-              itemDescription="feed"
               featureUrl="/feed"
-              loadMore={loadMoreFeedItems}
+              presenterFactory={(view: StatusItemView) =>
+                new FeedPresenter(view)
+              }
             />
           }
         />
@@ -85,9 +69,10 @@ const AuthenticatedRoutes = () => {
           element={
             <StatusItemScroller
               key={`story-${displayedUser!.alias}`}
-              itemDescription="story"
               featureUrl="/story"
-              loadMore={loadMoreStoryItems}
+              presenterFactory={(view: StatusItemView) =>
+                new StoryPresenter(view)
+              }
             />
           }
         />
