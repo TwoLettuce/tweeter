@@ -14,6 +14,9 @@ import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import { AuthToken, User, FakeData, Status } from "tweeter-shared";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import { useUserInfo } from "./components/userInfo/UserInfoHook";
+import { UserItemView } from "./presenter/userItem/UserItemPresenter";
+import { FolloweePresenter } from "./presenter/userItem/FolloweePresenter";
+import { FollowerPresenter } from "./presenter/userItem/FollowerPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -38,26 +41,6 @@ const App = () => {
 
 const AuthenticatedRoutes = () => {
   const { displayedUser } = useUserInfo();
-
-  const loadMoreFollowees = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastFollowee: User | null,
-  ): Promise<[User[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastFollowee, pageSize, userAlias);
-  };
-
-  const loadMoreFollowers = async (
-    authToken: AuthToken,
-    userAlias: string,
-    pageSize: number,
-    lastFollower: User | null,
-  ): Promise<[User[], boolean]> => {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastFollower, pageSize, userAlias);
-  };
 
   const loadMoreFeedItems = async (
     authToken: AuthToken,
@@ -113,9 +96,10 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={`followees-${displayedUser!.alias}`}
-              itemDescription="followees"
               featureUrl="/followees"
-              loadMore={loadMoreFollowees}
+              presenterFactory={(view: UserItemView) =>
+                new FolloweePresenter(view)
+              }
             />
           }
         />
@@ -124,9 +108,10 @@ const AuthenticatedRoutes = () => {
           element={
             <UserItemScroller
               key={`followers-${displayedUser!.alias}`}
-              itemDescription="followers"
               featureUrl="/followers"
-              loadMore={loadMoreFollowers}
+              presenterFactory={(view: UserItemView) =>
+                new FollowerPresenter(view)
+              }
             />
           }
         />
