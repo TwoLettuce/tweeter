@@ -9,8 +9,7 @@ interface Props {
 }
 
 const UserItem = (props: Props) => {
-  const navigateToUser = async (event: React.MouseEvent): Promise<void> =>
-    useUserNavigation(event, props.featurePath);
+  const navigateToUser = useUserNavigation();
 
   return (
     <div className="col bg-light mx-0 px-0">
@@ -32,7 +31,7 @@ const UserItem = (props: Props) => {
               -{" "}
               <Link
                 to={`${props.featurePath}/${props.user.alias}`}
-                onClick={navigateToUser}
+                onClick={(event) => navigateToUser(event, props.featurePath)}
               >
                 {props.user.alias}
               </Link>

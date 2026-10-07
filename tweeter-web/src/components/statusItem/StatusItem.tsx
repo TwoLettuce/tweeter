@@ -9,9 +9,7 @@ interface Props {
 }
 
 const StatusItem = (props: Props) => {
-  const navigateToUser = async (event: React.MouseEvent): Promise<void> =>
-    useUserNavigation(event, props.featurePath);
-
+  const navigateToUser = useUserNavigation();
   return (
     <div className="col bg-light mx-0 px-0">
       <div className="container px-0">
@@ -32,7 +30,7 @@ const StatusItem = (props: Props) => {
               -{" "}
               <Link
                 to={`${props.featurePath}/${props.status.user.alias}`}
-                onClick={navigateToUser}
+                onClick={(event) => navigateToUser(event, props.featurePath)}
               >
                 {props.status.user.alias}
               </Link>

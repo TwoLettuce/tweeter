@@ -8,8 +8,7 @@ interface Props {
 }
 
 const Post = (props: Props) => {
-  const navigateToUser = async (event: React.MouseEvent): Promise<void> =>
-    useUserNavigation(event, props.featurePath);
+  const navigateToUser = useUserNavigation();
 
   return (
     <>
@@ -18,7 +17,7 @@ const Post = (props: Props) => {
           <Link
             key={index}
             to={`${props.featurePath}/${segment.text}`}
-            onClick={navigateToUser}
+            onClick={(event) => navigateToUser(event, props.featurePath)}
           >
             {segment.text}
           </Link>
