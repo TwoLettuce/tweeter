@@ -3,6 +3,11 @@ import { useUserInfo } from "../userInfo/UserInfoHook";
 import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import {
+  UserNavigationPresenter,
+  UserNavigationView,
+} from "../../presenter/appNavbar/UserNavigationPresenter";
 
 export const useUserNavigation = (): ((
   event: React.MouseEvent<Element, MouseEvent>,
@@ -13,39 +18,27 @@ export const useUserNavigation = (): ((
   const { displayErrorMessage } = useMessageActions();
   const navigate = useNavigate();
 
+  const presenterRef = useRef<UserNavigationPresenter | null>(null);
+  if (!presenterRef.current) {
+    const listener: UserNavigationView = {
+      setDisplayedUser: setDisplayedUser,
+      navigate: navigate,
+      displayErrorMessage: displayErrorMessage,
+    };
+    presenterRef.current = new UserNavigationPresenter(listener);
+  }
+
   const navigateToUser = async (
     event: React.MouseEvent,
     featurePath: string,
   ) => {
     event.preventDefault();
-
-    try {
-      const alias = extractAlias(event.target.toString());
-
-      const toUser = await getUser(authToken!, alias);
-
-      if (toUser) {
-        if (!toUser.equals(displayedUser!)) {
-          setDisplayedUser(toUser);
-          navigate(`${featurePath}/${toUser.alias}`);
-        }
-      }
-    } catch (error) {
-      displayErrorMessage(`Failed to get user because of exception: ${error}`);
-    }
+    await presenterRef.current!.doNavigate(
+      event,
+      displayedUser!,
+      authToken!,
+      featurePath,
+    );
   };
   return navigateToUser;
-};
-
-const extractAlias = (value: string): string => {
-  const index = value.indexOf("@");
-  return value.substring(index);
-};
-
-const getUser = async (
-  authToken: AuthToken,
-  alias: string,
-): Promise<User | null> => {
-  // TODO: Replace with the result of calling server
-  return FakeData.instance.findUserByAlias(alias);
 };

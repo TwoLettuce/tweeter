@@ -14,15 +14,14 @@ const PostStatus = () => {
   const [post, setPost] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const listener: PostStatusView = {
-    displayInfoMessage: displayInfoMessage,
-    displayErrorMessage: displayErrorMessage,
-    deleteMessage: deleteMessage,
-    setPost: setPost,
-  };
-
   const presenterRef = useRef<PostStatusPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: PostStatusView = {
+      displayInfoMessage: displayInfoMessage,
+      displayErrorMessage: displayErrorMessage,
+      deleteMessage: deleteMessage,
+      setPost: setPost,
+    };
     presenterRef.current = new PostStatusPresenter(listener);
   }
 

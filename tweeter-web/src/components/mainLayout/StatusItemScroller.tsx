@@ -24,13 +24,13 @@ const StatusItemScroller = (props: Props) => {
   const { setDisplayedUser } = useUserInfoActions();
   const { displayedUser: displayedUserAliasParam } = useParams();
 
-  const listener: StatusItemView = {
-    addItems: (newItems: Status[]) =>
-      setItems((previousItems: Status[]) => [...previousItems, ...newItems]),
-    displayErrorMessage: displayErrorMessage,
-  };
   const presenterRef = useRef<StatusItemPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: StatusItemView = {
+      addItems: (newItems: Status[]) =>
+        setItems((previousItems: Status[]) => [...previousItems, ...newItems]),
+      displayErrorMessage: displayErrorMessage,
+    };
     presenterRef.current = props.presenterFactory(listener);
   }
 

@@ -22,14 +22,13 @@ const UserItemScroller = (props: Props) => {
   const { setDisplayedUser } = useUserInfoActions();
   const { displayedUser: displayedUserAliasParam } = useParams();
 
-  const listener: UserItemView = {
-    addItems: (newItems: User[]) =>
-      setItems((previousItems) => [...previousItems, ...newItems]),
-    displayErrorMessage: displayErrorMessage,
-  };
-
   const presenterRef = useRef<UserItemPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: UserItemView = {
+      addItems: (newItems: User[]) =>
+        setItems((previousItems) => [...previousItems, ...newItems]),
+      displayErrorMessage: displayErrorMessage,
+    };
     presenterRef.current = props.presenterFactory(listener);
   }
   // Update the displayed user context variable whenever the displayedUser url parameter changes. This allows browser forward and back buttons to work correctly.

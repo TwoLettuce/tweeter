@@ -19,15 +19,15 @@ const AppNavbar = () => {
   const { displayInfoMessage, displayErrorMessage, deleteMessage } =
     useMessageActions();
 
-  const listener: AppNavbarView = {
-    displayInfoMessage: displayInfoMessage,
-    displayErrorMessage: displayErrorMessage,
-    deleteMessage: deleteMessage,
-    clearUserInfo: clearUserInfo,
-    navigate: navigate,
-  };
   const presenterRef = useRef<AppNavbarPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: AppNavbarView = {
+      displayInfoMessage: displayInfoMessage,
+      displayErrorMessage: displayErrorMessage,
+      deleteMessage: deleteMessage,
+      clearUserInfo: clearUserInfo,
+      navigate: navigate,
+    };
     presenterRef.current = new AppNavbarPresenter(listener);
   }
 

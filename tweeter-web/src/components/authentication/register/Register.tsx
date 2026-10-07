@@ -25,15 +25,15 @@ const Register = () => {
   const { updateUserInfo } = useUserInfoActions();
   const { displayErrorMessage } = useMessageActions();
 
-  const listener: RegisterView = {
-    setImageUrl: setImageUrl,
-    setImageFileExtension: setImageFileExtension,
-    updateUserInfo: updateUserInfo,
-    displayErrorMessage: displayErrorMessage,
-    navigate: navigate,
-  };
   const presenterRef = useRef<RegisterPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: RegisterView = {
+      setImageUrl: setImageUrl,
+      setImageFileExtension: setImageFileExtension,
+      updateUserInfo: updateUserInfo,
+      displayErrorMessage: displayErrorMessage,
+      navigate: navigate,
+    };
     presenterRef.current = new RegisterPresenter(listener);
   }
 

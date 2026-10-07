@@ -25,14 +25,13 @@ const Login = (props: Props) => {
   const { updateUserInfo } = useUserInfoActions();
   const { displayErrorMessage } = useMessageActions();
 
-  const listener: LoginView = {
-    updateUserInfo: updateUserInfo,
-    displayErrorMessage: displayErrorMessage,
-    navigate: navigate,
-  };
-
   const presenterRef = useRef<LoginPresenter | null>(null);
   if (!presenterRef.current) {
+    const listener: LoginView = {
+      updateUserInfo: updateUserInfo,
+      displayErrorMessage: displayErrorMessage,
+      navigate: navigate,
+    };
     presenterRef.current = new LoginPresenter(listener);
   }
 
