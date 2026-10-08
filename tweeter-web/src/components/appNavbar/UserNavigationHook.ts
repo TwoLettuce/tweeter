@@ -1,4 +1,3 @@
-import { AuthToken, FakeData, User } from "tweeter-shared";
 import { useUserInfo } from "../userInfo/UserInfoHook";
 import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
 import { useMessageActions } from "../toaster/MessageHooks";

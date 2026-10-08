@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useMessageActions } from "../toaster/MessageHooks";
 
-const OAuth = () => {
-  const { displayInfoMessage } = useMessageActions();
+interface Props {
+  displayInfoMessageWithDarkBackground: (message: string) => void;
+}
 
-  const displayInfoMessageWithDarkBackground = (message: string): void => {
-    displayInfoMessage(message, 3000, "text-white bg-primary");
-  };
+const OAuth = (props: Props) => {
+  const { displayInfoMessage } = useMessageActions();
 
   return (
     <div className="text-center mb-3">
@@ -15,7 +15,7 @@ const OAuth = () => {
         type="button"
         className="btn btn-link btn-floating mx-1"
         onClick={() =>
-          displayInfoMessageWithDarkBackground(
+          props.displayInfoMessageWithDarkBackground(
             "Google registration is not implemented.",
           )
         }
@@ -32,7 +32,7 @@ const OAuth = () => {
         type="button"
         className="btn btn-link btn-floating mx-1"
         onClick={() =>
-          displayInfoMessageWithDarkBackground(
+          props.displayInfoMessageWithDarkBackground(
             "Facebook registration is not implemented.",
           )
         }
@@ -49,7 +49,7 @@ const OAuth = () => {
         type="button"
         className="btn btn-link btn-floating mx-1"
         onClick={() =>
-          displayInfoMessageWithDarkBackground(
+          props.displayInfoMessageWithDarkBackground(
             "Twitter registration is not implemented.",
           )
         }
@@ -66,7 +66,7 @@ const OAuth = () => {
         type="button"
         className="btn btn-link btn-floating mx-1"
         onClick={() =>
-          displayInfoMessageWithDarkBackground(
+          props.displayInfoMessageWithDarkBackground(
             "LinkedIn registration is not implemented.",
           )
         }
@@ -83,7 +83,7 @@ const OAuth = () => {
         type="button"
         className="btn btn-link btn-floating mx-1"
         onClick={() =>
-          displayInfoMessageWithDarkBackground(
+          props.displayInfoMessageWithDarkBackground(
             "Github registration is not implemented.",
           )
         }
