@@ -2,8 +2,9 @@ import { NavigateFunction } from "react-router-dom";
 import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../../../model/service/UserService";
 import { Buffer } from "buffer";
+import { Presenter, View } from "../../Presenter";
 
-export interface RegisterView {
+export interface RegisterView extends View {
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   setImageFileExtension: React.Dispatch<React.SetStateAction<string>>;
   updateUserInfo: (
@@ -12,20 +13,15 @@ export interface RegisterView {
     authToken: AuthToken,
     remember: boolean,
   ) => void;
-  displayErrorMessage: (
-    message: string,
-    bootstrapClasses?: string | undefined,
-  ) => string;
   navigate: NavigateFunction;
 }
 
-export class RegisterPresenter {
-  private view: RegisterView;
+export class RegisterPresenter extends Presenter<RegisterView> {
   private userService: UserService;
-  private imageBytes: Uint8Array<ArrayBufferLike> = new Uint8Array();
+  private imageBytes: Uint8Array = new Uint8Array();
 
   public constructor(view: RegisterView) {
-    this.view = view;
+    super(view);
     this.userService = new UserService();
   }
 
@@ -37,7 +33,7 @@ export class RegisterPresenter {
     imageFileExtension: string,
     rememberMe: boolean,
   ) {
-    try {
+    await this.doFailureReportingOperation(async () => {
       const [user, authToken] = await this.userService.register(
         firstName,
         lastName,
@@ -49,12 +45,7 @@ export class RegisterPresenter {
 
       this.view.updateUserInfo(user, user, authToken, rememberMe);
       this.view.navigate(`/feed/${user.alias}`);
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to register user because of exception: ${error}`,
-      );
-    } finally {
-    }
+    }, "register user");
   }
 
   public handleImageFile(file: File | undefined) {

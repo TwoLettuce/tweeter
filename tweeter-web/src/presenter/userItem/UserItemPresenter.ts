@@ -43,10 +43,10 @@ export abstract class UserItemPresenter extends Presenter<UserItemView> {
   protected set lastItem(value: User | null) {
     this._lastItem = value;
   }
-  public get _view(): UserItemView {
+  public get view(): UserItemView {
     return this._view;
   }
-  public set _view(value: UserItemView) {
+  public set view(value: UserItemView) {
     this._view = value;
   }
   public get hasMoreItems() {
