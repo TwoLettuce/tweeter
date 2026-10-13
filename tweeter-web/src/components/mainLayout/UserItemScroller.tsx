@@ -6,14 +6,12 @@ import UserItem from "../userItem/UserItem";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
 import { useUserInfo } from "../userInfo/UserInfoHook";
-import {
-  UserItemPresenter,
-  UserItemView,
-} from "../../presenter/userItem/UserItemPresenter";
+import { UserItemPresenter } from "../../presenter/paged/userItem/UserItemPresenter";
+import { PagedItemView } from "../../presenter/paged/PagedItemPresenter";
 
 interface Props {
   featureUrl: string;
-  presenterFactory: (listener: UserItemView) => UserItemPresenter;
+  presenterFactory: (listener: PagedItemView<User>) => UserItemPresenter;
 }
 const UserItemScroller = (props: Props) => {
   const { displayErrorMessage } = useMessageActions();
@@ -24,7 +22,7 @@ const UserItemScroller = (props: Props) => {
 
   const presenterRef = useRef<UserItemPresenter | null>(null);
   if (!presenterRef.current) {
-    const listener: UserItemView = {
+    const listener: PagedItemView<User> = {
       addItems: (newItems: User[]) =>
         setItems((previousItems) => [...previousItems, ...newItems]),
       displayErrorMessage: displayErrorMessage,
@@ -69,7 +67,7 @@ const UserItemScroller = (props: Props) => {
         className="pr-0 mr-0"
         dataLength={items.length}
         next={loadMoreItems}
-        hasMore={presenterRef.current!.hasMoreItems}
+        hasMore={presenterRef.current!.hasMore}
         loader={<h4>Loading...</h4>}
       >
         {items.map((item, index) => (

@@ -6,14 +6,12 @@ import StatusItem from "../statusItem/StatusItem";
 import { useMessageActions } from "../toaster/MessageHooks";
 import { useUserInfoActions } from "../userInfo/UserInfoActionsHook";
 import { useUserInfo } from "../userInfo/UserInfoHook";
-import {
-  StatusItemPresenter,
-  StatusItemView,
-} from "../../presenter/statusItem/StatusItemPresenter";
+import { StatusItemPresenter } from "../../presenter/paged/statusItem/StatusItemPresenter";
+import { PagedItemView } from "../../presenter/paged/PagedItemPresenter";
 
 interface Props {
   featureUrl: string;
-  presenterFactory: (listener: StatusItemView) => StatusItemPresenter;
+  presenterFactory: (listener: PagedItemView<Status>) => StatusItemPresenter;
 }
 
 const StatusItemScroller = (props: Props) => {
@@ -26,7 +24,7 @@ const StatusItemScroller = (props: Props) => {
 
   const presenterRef = useRef<StatusItemPresenter | null>(null);
   if (!presenterRef.current) {
-    const listener: StatusItemView = {
+    const listener: PagedItemView<Status> = {
       addItems: (newItems: Status[]) =>
         setItems((previousItems: Status[]) => [...previousItems, ...newItems]),
       displayErrorMessage: displayErrorMessage,
