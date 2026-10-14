@@ -1,40 +1,30 @@
-import { NavigateFunction } from "react-router-dom";
-import { UserService } from "../../../model/service/UserService";
-import { User, AuthToken } from "tweeter-shared";
-import { Presenter, View } from "../../Presenter";
+import { User } from "tweeter-shared";
+import {
+  AuthenticationPresenter,
+  AuthenticationView,
+} from "../AuthenticationPresenter";
 
-export interface LoginView extends View {
-  updateUserInfo: (
-    currentUser: User,
-    displayedUser: User | null,
-    authToken: AuthToken,
-    remember: boolean,
-  ) => void;
-  navigate: NavigateFunction;
-}
-export class LoginPresenter extends Presenter<LoginView> {
-  private userService: UserService;
-
-  public constructor(view: LoginView) {
-    super(view);
-    this.userService = new UserService();
-  }
-
+export interface LoginView extends AuthenticationView {}
+export class LoginPresenter extends AuthenticationPresenter<LoginView> {
   public async doLogin(
     alias: string,
     password: string,
     rememberMe: boolean,
     originalUrl?: string,
   ) {
-    await this.doFailureReportingOperation(async () => {
-      const [user, authToken] = await this.userService.login(alias, password);
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-
-      if (!!originalUrl) {
-        this.view.navigate(originalUrl);
-      } else {
-        this.view.navigate(`/feed/${user.alias}`);
-      }
-    }, "log user in");
+    await this.doAuthenticationOperation(
+      async () => {
+        const [user, authToken] = await this.userService.login(alias, password);
+        return [user, authToken, rememberMe];
+      },
+      (user: User) => {
+        if (!!originalUrl) {
+          this.view.navigate(originalUrl);
+        } else {
+          this.view.navigate(`/feed/${user.alias}`);
+        }
+      },
+      "log user in",
+    );
   }
 }

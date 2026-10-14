@@ -1,29 +1,16 @@
-import { NavigateFunction } from "react-router-dom";
-import { User, AuthToken } from "tweeter-shared";
-import { UserService } from "../../../model/service/UserService";
 import { Buffer } from "buffer";
-import { Presenter, View } from "../../Presenter";
+import {
+  AuthenticationPresenter,
+  AuthenticationView,
+} from "../AuthenticationPresenter";
 
-export interface RegisterView extends View {
+export interface RegisterView extends AuthenticationView {
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   setImageFileExtension: React.Dispatch<React.SetStateAction<string>>;
-  updateUserInfo: (
-    currentUser: User,
-    displayedUser: User | null,
-    authToken: AuthToken,
-    remember: boolean,
-  ) => void;
-  navigate: NavigateFunction;
 }
 
-export class RegisterPresenter extends Presenter<RegisterView> {
-  private userService: UserService;
+export class RegisterPresenter extends AuthenticationPresenter<RegisterView> {
   private imageBytes: Uint8Array = new Uint8Array();
-
-  public constructor(view: RegisterView) {
-    super(view);
-    this.userService = new UserService();
-  }
 
   public async doRegister(
     firstName: string,
@@ -33,19 +20,21 @@ export class RegisterPresenter extends Presenter<RegisterView> {
     imageFileExtension: string,
     rememberMe: boolean,
   ) {
-    await this.doFailureReportingOperation(async () => {
-      const [user, authToken] = await this.userService.register(
-        firstName,
-        lastName,
-        alias,
-        password,
-        this.imageBytes,
-        imageFileExtension,
-      );
-
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-      this.view.navigate(`/feed/${user.alias}`);
-    }, "register user");
+    await this.doAuthenticationOperation(
+      async () => {
+        const [user, authToken] = await this.userService.register(
+          firstName,
+          lastName,
+          alias,
+          password,
+          this.imageBytes,
+          imageFileExtension,
+        );
+        return [user, authToken, rememberMe];
+      },
+      (user) => this.view.navigate(`/feed/${user.alias}`),
+      "register user",
+    );
   }
 
   public handleImageFile(file: File | undefined) {
