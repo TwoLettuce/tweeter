@@ -3,6 +3,7 @@ import {
   AuthenticationPresenter,
   AuthenticationView,
 } from "../AuthenticationPresenter";
+import { User } from "tweeter-shared";
 
 export interface RegisterView extends AuthenticationView {
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -32,7 +33,7 @@ export class RegisterPresenter extends AuthenticationPresenter<RegisterView> {
         );
         return [user, authToken, rememberMe];
       },
-      (user) => this.view.navigate(`/feed/${user.alias}`),
+      (user: User) => this.view.navigate(`/feed/${user.alias}`),
       "register user",
     );
   }
