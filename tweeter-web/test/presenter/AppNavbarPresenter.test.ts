@@ -19,7 +19,7 @@ describe("AppNavbarPresenter", () => {
   let presenter: AppNavbarPresenter;
   const authToken: AuthToken = new AuthToken("dummy-token", Date.now());
   let mockUserService: UserService;
-  let infoMessageID = "InfoMessageID";
+  let infoMessageID = "PostingStatusID";
 
   beforeEach(() => {
     mockAppNavbarView = mock<AppNavbarView>();

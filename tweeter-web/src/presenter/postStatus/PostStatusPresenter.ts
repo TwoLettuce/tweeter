@@ -7,20 +7,20 @@ export interface PostStatusView extends MessageView {
 }
 
 export class PostStatusPresenter extends Presenter<PostStatusView> {
-  private statusService: StatusService;
+  private _statusService: StatusService;
 
   public constructor(view: PostStatusView) {
     super(view);
-    this.statusService = new StatusService();
+    this._statusService = new StatusService();
   }
+
   public async submitPost(
     post: string,
     currentUser: User,
     authToken: AuthToken,
   ) {
+    var postingStatusToastId = "";
     await this.doFailureReportingOperation(async () => {
-      var postingStatusToastId = "";
-
       postingStatusToastId = this.view.displayInfoMessage(
         "Posting status...",
         0,
@@ -33,5 +33,10 @@ export class PostStatusPresenter extends Presenter<PostStatusView> {
       this.view.setPost("");
       this.view.displayInfoMessage("Status posted!", 2000);
     }, "post the status");
+    this.view.deleteMessage(postingStatusToastId);
+  }
+
+  public get statusService() {
+    return this._statusService;
   }
 }
