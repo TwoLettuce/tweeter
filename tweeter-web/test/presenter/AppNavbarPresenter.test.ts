@@ -19,9 +19,14 @@ describe("AppNavbarPresenter", () => {
   let presenter: AppNavbarPresenter;
   const authToken: AuthToken = new AuthToken("dummy-token", Date.now());
   let mockUserService: UserService;
+  let infoMessageID = "InfoMessageID";
 
   beforeEach(() => {
     mockAppNavbarView = mock<AppNavbarView>();
+    when(mockAppNavbarView.displayInfoMessage(anything(), 0)).thenReturn(
+      infoMessageID,
+    );
+    when(mockAppNavbarView.displayErrorMessage(anything()));
     const mockAppNavbarViewInstance = instance(mockAppNavbarView);
 
     mockUserService = mock<UserService>();
@@ -47,7 +52,7 @@ describe("AppNavbarPresenter", () => {
 
   test("tells the view to clear the info message, user info, and navigates to login", async () => {
     await presenter.logOut(authToken);
-    verify(mockAppNavbarView.deleteMessage(anything())).once();
+    verify(mockAppNavbarView.deleteMessage(infoMessageID)).once();
     verify(mockAppNavbarView.clearUserInfo()).once();
     verify(mockAppNavbarView.navigate(anything()));
   });
@@ -63,7 +68,7 @@ describe("AppNavbarPresenter", () => {
       ),
     ).once();
 
-    verify(mockAppNavbarView.deleteMessage(anything())).never();
+    verify(mockAppNavbarView.deleteMessage(infoMessageID)).never();
     verify(mockAppNavbarView.clearUserInfo()).never();
     verify(mockAppNavbarView.navigate(anything())).never();
   });
