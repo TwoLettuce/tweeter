@@ -13,6 +13,7 @@ import {
 
 interface Props {
   originalUrl?: string;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -32,8 +33,10 @@ const Login = (props: Props) => {
       displayErrorMessage: displayErrorMessage,
       navigate: navigate,
     };
-    presenterRef.current = new LoginPresenter(listener);
+    presenterRef.current = props.presenter ?? new LoginPresenter(listener);
   }
+
+  //if problems with remember me see M2C Component testing 42:00
 
   const checkSubmitButtonStatus = (): boolean => {
     return !alias || !password;
