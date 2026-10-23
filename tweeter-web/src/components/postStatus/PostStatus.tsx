@@ -7,7 +7,11 @@ import {
   PostStatusView,
 } from "../../presenter/postStatus/PostStatusPresenter";
 
-const PostStatus = () => {
+interface Props {
+  presenter?: PostStatusPresenter;
+}
+
+const PostStatus = (props: Props) => {
   const { displayInfoMessage, displayErrorMessage, deleteMessage } =
     useMessageActions();
   const { currentUser, authToken } = useUserInfo();
@@ -22,7 +26,7 @@ const PostStatus = () => {
       deleteMessage: deleteMessage,
       setPost: setPost,
     };
-    presenterRef.current = new PostStatusPresenter(listener);
+    presenterRef.current = props.presenter ?? new PostStatusPresenter(listener);
   }
 
   const submitPost = async (event: React.MouseEvent) => {
