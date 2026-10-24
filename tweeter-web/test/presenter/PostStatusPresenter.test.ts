@@ -83,7 +83,6 @@ describe("PostStatusPresenter", () => {
 
     verify(mockPostStatusView.deleteMessage(messageID)).once();
 
-    console.log(capture(mockPostStatusView.displayErrorMessage).last());
     verify(
       mockPostStatusView.displayErrorMessage(
         "Failed to post the status because of exception: Something's wrong",
