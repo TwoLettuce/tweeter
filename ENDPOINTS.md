@@ -5,8 +5,8 @@
 ```http
 Method: GET
 Path: /followees/{alias}
-Headers: Authorization
 Body: {
+  authToken: string,
   lastFollowee: User,
   pageSize: number
 }
@@ -14,10 +14,12 @@ Body: {
 
 #### Get Followers
 
+```http
 Method: GET
 Path: /followers/{alias}
-Headers: Authorization=authToken
 Body: {
-lastFollower: User,
-pageSize: number
+  authToken: string,
+  lastFollower: User,
+  pageSize: number
 }
+```

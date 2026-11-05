@@ -99,17 +99,17 @@ Resources:
           # Endpoint definitions
           #
 
-          /user/get: ##### TODO: Change "/user/get" to the actual endpoint URL
+          /followees/{alias}: ##### TODO: Change "/user/get" to the actual endpoint URL
             post:
               consumes: *commonConsumes
               produces: *commonProduces
               x-amazon-apigateway-integration:
                 type: aws
-                httpMethod: POST
+                httpMethod: GET
                 uri:
                   ##### TODO: Change "userGetFunction" to the actual function name. (Don't delete the $, {}, or .Arn suffix.)
                   ##### The function name must agree with the "Web API Lambda functions" section below.
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${userGetFunction.Arn}/invocations
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getFollowees.Arn}/invocations
                 requestTemplates: *commonRequestTemplates
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
@@ -133,6 +133,46 @@ Resources:
             #
 
   #
+  # Web API Lambda functions
+  #
+
+  ##### TODO: Change "userGetFunction" to the actual function name.
+  ##### It must match the function name in the "Endpoint definitons" section above.
+  getFollowees:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getFollowees
+      ##### TODO: Modify Handler property to match your code. This identifies the exact function that the lambda should run.
+      Handler: handlers/users/UserGetHandler.userGetHandler
+      Policies: *commonPolicies
+      Events:
+        PostApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            ##### TODO: Modify the Path property to the actual endpoint URL.
+            ##### It must match the URL in the "Endpoint definitions" section above.
+            Path: /followees/{alias}
+            Method: GET
+
+  userCreateFunction: ##### TODO: Set function name
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: userCreateFunction ##### TODO: Set function name
+      Handler: handlers/users/UserCreateHandler.userCreateHandler ##### TODO: Set Handler
+      Policies: *commonPolicies
+      Events:
+        PostApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /user/create ##### TODO: Set Path
+            Method: POST
+
+  #
+  # TODO: ADD MORE WEB API LAMBDA DEFINITIONS HERE
+  #
+  #
   # SQS Queues  (This will become relevant in Milestone 4. For M3, leave this section commented out.)
   #
 
@@ -153,48 +193,6 @@ Resources:
   #     CompatibleRuntimes:
   #       - nodejs20.x
   #     RetentionPolicy: DELETE
-
-  #
-  # Web API Lambda functions
-  #
-
-  ##### TODO: Change "userGetFunction" to the actual function name.
-  ##### It must match the function name in the "Endpoint definitons" section above.
-  userGetFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      ##### TODO: Change "userGetFunction" to the actual function name.
-      FunctionName: userGetFunction
-      ##### TODO: Modify Handler property to match your code. This identifies the exact function that the lambda should run.
-      Handler: handlers/users/UserGetHandler.userGetHandler
-      Policies: *commonPolicies
-      Events:
-        PostApi:
-          Type: Api
-          Properties:
-            RestApiId: !Ref tweeterApi
-            ##### TODO: Modify the Path property to the actual endpoint URL.
-            ##### It must match the URL in the "Endpoint definitions" section above.
-            Path: /user/get
-            Method: POST
-
-  userCreateFunction: ##### TODO: Set function name
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: userCreateFunction ##### TODO: Set function name
-      Handler: handlers/users/UserCreateHandler.userCreateHandler ##### TODO: Set Handler
-      Policies: *commonPolicies
-      Events:
-        PostApi:
-          Type: Api
-          Properties:
-            RestApiId: !Ref tweeterApi
-            Path: /user/create ##### TODO: Set Path
-            Method: POST
-
-  #
-  # TODO: ADD MORE WEB API LAMBDA DEFINITIONS HERE
-  #
 
   #
   # SQS Queue Lambda Functions  (This will become relevant in Milestone 4. For M3, leave this section commented out.)
