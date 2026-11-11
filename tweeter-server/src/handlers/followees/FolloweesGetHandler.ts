@@ -1,12 +1,15 @@
-import { User } from "tweeter-shared";
+import {
+  FakeData,
+  PagedUserItemRequest,
+  PagedUserItemResponse,
+} from "tweeter-shared";
 
-type FolloweesRequest = {
-  alias: string;
-  body: {
-    authToken: string;
-    lastFollowee: User | null;
-    pageSize: number;
-  };
+export const followeesGetHandler = async (
+  request: PagedUserItemRequest,
+): Promise<PagedUserItemResponse> => {
+  return FakeData.instance.getPageOfUsers(
+    request.lastItem,
+    request.pageSize,
+    request.userAlias,
+  );
 };
-
-export const followeesGetHandler = (request: FolloweesRequest) => {};

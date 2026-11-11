@@ -1,6 +1,6 @@
 ## Endpoints:
 
-#### Get Followees
+### Get Followees
 
 ```http
 Method: GET
@@ -9,6 +9,23 @@ Body: {
   authToken: string,
   lastFollowee: User,
   pageSize: number
+}
+```
+
+Returns User[]:
+
+```
+{
+  [
+    {
+      _firstName: string,
+      _lastName: string,
+      _alias: string,
+      _imageUrl: string,
+    }
+    ...
+  ],
+  hasMore: boolean
 }
 ```
 
