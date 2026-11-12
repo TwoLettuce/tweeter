@@ -1,3 +1,5 @@
+import { UserDto } from "../dto/UserDto";
+
 export class User {
   private _firstName: string;
   private _lastName: string;
@@ -8,7 +10,7 @@ export class User {
     firstName: string,
     lastName: string,
     alias: string,
-    imageUrl: string
+    imageUrl: string,
   ) {
     this._firstName = firstName;
     this._lastName = lastName;
@@ -56,6 +58,21 @@ export class User {
     return this._alias === other._alias;
   }
 
+  public static fromDto(dto: UserDto | null) {
+    return dto != null
+      ? new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl)
+      : null;
+  }
+
+  public get dto(): UserDto {
+    return {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      alias: this.alias,
+      imageUrl: this.imageUrl,
+    };
+  }
+
   public static fromJson(json: string | null | undefined): User | null {
     if (!!json) {
       const jsonObject: {
@@ -68,7 +85,7 @@ export class User {
         jsonObject._firstName,
         jsonObject._lastName,
         jsonObject._alias,
-        jsonObject._imageUrl
+        jsonObject._imageUrl,
       );
     } else {
       return null;

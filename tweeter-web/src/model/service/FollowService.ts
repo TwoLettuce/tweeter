@@ -1,4 +1,4 @@
-import { AuthToken, FakeData, UserDto } from "tweeter-shared";
+import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 
 export class FollowService implements Service {
@@ -9,7 +9,20 @@ export class FollowService implements Service {
     lastFollowee: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastFollowee, pageSize, userAlias);
+    return this.getFakeData(lastFollowee, pageSize, userAlias);
+  }
+
+  private async getFakeData(
+    lastItem: UserDto | null,
+    pageSize: number,
+    userAlias: string,
+  ): Promise<[UserDto[], boolean]> {
+    const [users, hasMore] = FakeData.instance.getPageOfUsers(
+      this.getDomainObject(lastItem),
+      pageSize,
+      userAlias,
+    );
+    return [users.map(this.getDto), hasMore];
   }
 
   public async loadMoreFollowers(
@@ -19,7 +32,7 @@ export class FollowService implements Service {
     lastFollower: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastFollower, pageSize, userAlias);
+    return this.getFakeData(lastFollower, pageSize, userAlias);
   }
 
   public async getIsFollowerStatus(
@@ -81,5 +94,20 @@ export class FollowService implements Service {
     );
 
     return [followerCount, followeeCount];
+  }
+
+  private getDomainObject(dto: UserDto | null) {
+    return dto != null
+      ? new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl)
+      : null;
+  }
+
+  private getDto(user: User): UserDto {
+    return {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      alias: user.alias,
+      imageUrl: user.imageUrl,
+    };
   }
 }
