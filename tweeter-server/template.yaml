@@ -115,6 +115,18 @@ Resources:
             #
             # TODO: ADD MORE ENDPOINT DEFINITIONS HERE
             #
+  #
+  # Lambda Layer (reused by all Lambda functions)
+  #
+  tweeterLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: tweeterLayer
+      Description: dependencies layer for Tweeter server
+      ContentUri: ./layer/
+      CompatibleRuntimes:
+        - nodejs20.x
+      RetentionPolicy: DELETE
 
   #
   # Web API Lambda functions
@@ -124,7 +136,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getFollowees
-      Handler: handlers/followees/FolloweesGetHandler.followeesGetHandler
+      Handler: src/handlers/followees/FolloweesGetHandler.followeesGetHandler
       Policies: *commonPolicies
       Events:
         GetFolloweesApi:
@@ -145,19 +157,6 @@ Resources:
   #     Type: AWS::SQS::Queue
   #     Properties:
   #       QueueName: MyQueue
-
-  #
-  # Lambda Layer (reused by all Lambda functions)
-  #
-  # tweeterLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: tweeterLayer
-  #     Description: dependencies layer for Tweeter server
-  #     ContentUri: ./layer/
-  #     CompatibleRuntimes:
-  #       - nodejs20.x
-  #     RetentionPolicy: DELETE
 
   #
   # SQS Queue Lambda Functions  (This will become relevant in Milestone 4. For M3, leave this section commented out.)

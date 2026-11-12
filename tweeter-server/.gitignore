@@ -1,4 +1,6 @@
 
 /node_modules
 /dist
-/layer/nodejs
+/layer/nodejs/*
+/.aws-sam
+./build.toml
