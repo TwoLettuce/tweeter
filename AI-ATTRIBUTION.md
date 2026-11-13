@@ -21,3 +21,9 @@
 - Tool: Codex
 - Task: Fix Lambda deployment packaging so tweeter-shared is included as a real package in the layer, and make deployment stop on command failures without deleting the existing stack first.
 - Review: Lambda deployment packaging successful. Successful Lambda requests function without errors.
+
+## 2026-11-13: tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Align Get Followees and Get Followers endpoint documentation with the server API contract, then document the remaining application endpoints.
+- Review: AI endpoint definitions look good.
