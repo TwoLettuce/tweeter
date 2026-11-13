@@ -14,4 +14,10 @@
 
 - Tool: Codex
 - Task: Correct the Lambda handler path to match the compiled JavaScript location under dist/src.
-- Review: TODO
+- Review: Lambda deploys correctly, now getting issues with dependencies and symbolic links.
+
+## 2026-11-13: deploy.Ps1, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Fix Lambda deployment packaging so tweeter-shared is included as a real package in the layer, and make deployment stop on command failures without deleting the existing stack first.
+- Review: Lambda deployment packaging successful. Successful Lambda requests function without errors.
