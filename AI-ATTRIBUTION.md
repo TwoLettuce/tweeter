@@ -39,3 +39,9 @@
 - Tool: Codex
 - Task: Fix loadMoreFollowees to await and return its result, convert user DTOs, and handle failed or missing responses.
 - Review: changes reviewed and accepted
+
+## 2026-11-14: tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Move followee request construction into FollowService and update ServerFacade to accept the typed request object.
+- Review: Changes reviewd and approved

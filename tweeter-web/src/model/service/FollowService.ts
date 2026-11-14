@@ -1,6 +1,6 @@
-import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
+// AI-assisted: see AI-ATTRIBUTION.md
+import { AuthToken, FakeData, PagedItemRequest, User, UserDto } from "tweeter-shared";
 import { Service } from "./Service";
-import { ServerFacade } from "../../net/ServerFacade";
 
 export class FollowService extends Service {
   public async loadMoreFollowees(
@@ -9,13 +9,13 @@ export class FollowService extends Service {
     pageSize: number,
     lastFollowee: User | null,
   ): Promise<[User[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return await this.server.loadMoreFollowees(
-      token.token,
-      userAlias,
-      pageSize,
-      lastFollowee,
-    );
+    const req: PagedItemRequest<UserDto> = {
+      token: token.token,
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastFollowee?.dto,
+    };
+    return await this.server.loadMoreFollowees(req);
   }
 
   public async loadMoreFollowers(
