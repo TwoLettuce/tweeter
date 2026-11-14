@@ -58,10 +58,8 @@ export class User {
     return this._alias === other._alias;
   }
 
-  public static fromDto(dto: UserDto | null) {
-    return dto != null
-      ? new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl)
-      : null;
+  public static fromDto(dto: UserDto) {
+    return new User(dto.firstName, dto.lastName, dto.alias, dto.imageUrl);
   }
 
   public get dto(): UserDto {

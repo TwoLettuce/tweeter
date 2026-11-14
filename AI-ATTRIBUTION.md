@@ -27,3 +27,15 @@
 - Tool: Codex
 - Task: Align Get Followees and Get Followers endpoint documentation with the server API contract, then document the remaining application endpoints.
 - Review: AI endpoint definitions look good.
+
+## 2026-11-14: tweeter-web/src/net/ClientCommunicator.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Refactor ClientCommunicator to expose methods for GET, POST, DELETE, and PUT with shared request and response handling.
+- Review: code reviewed and looks good. Had to add request body to GET methods.
+
+## 2026-11-14: tweeter-web/src/net/ServerFacade.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Fix loadMoreFollowees to await and return its result, convert user DTOs, and handle failed or missing responses.
+- Review: changes reviewed and accepted
