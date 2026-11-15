@@ -6,6 +6,7 @@ import {
   FollowRequest,
   UnfollowRequest,
   FollowResponse,
+  PostStatusRequest,
   IsFollowerRequest,
   IsFollowerResponse,
   LoginRequest,
@@ -30,6 +31,17 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async postStatus(req: PostStatusRequest): Promise<void> {
+    const res = await this.clientCommunicator.doPost<
+      PostStatusRequest,
+      TweeterResponse
+    >(req, "/status");
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to post status");
+    }
   }
 
   public async follow(

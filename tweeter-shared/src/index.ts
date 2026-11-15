@@ -24,6 +24,7 @@ export type { CountResponse } from "./model/net/response/CountResponse";
 export type { FollowRequest } from "./model/net/request/FollowRequest";
 export type { UnfollowRequest } from "./model/net/request/UnfollowRequest";
 export type { FollowResponse } from "./model/net/response/FollowResponse";
+export type { PostStatusRequest } from "./model/net/request/PostStatusRequest";
 export type { StatusDto } from "./model/dto/StatusDto";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";

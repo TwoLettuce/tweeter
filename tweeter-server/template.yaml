@@ -242,6 +242,19 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
+          /status:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${postStatus.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
           /feed/{alias}:
             post:
               consumes: *commonConsumes
@@ -436,6 +449,20 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /followers/{alias}
+            Method: POST
+
+  postStatus:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: postStatus
+      Handler: src/handlers/status/PostStatusHandler.postStatusHandler
+      Policies: *commonPolicies
+      Events:
+        PostStatusApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /status
             Method: POST
 
   getFeed:

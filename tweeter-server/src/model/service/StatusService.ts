@@ -2,6 +2,10 @@
 import { FakeData, Status, StatusDto } from "tweeter-shared";
 
 export class StatusService {
+  public async postStatus(token: string, newStatus: StatusDto): Promise<void> {
+    // Store the status and distribute it to followers' feeds when persistence is added.
+  }
+
   public async loadMoreFeedItems(
     token: string,
     userAlias: string,

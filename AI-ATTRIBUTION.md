@@ -117,3 +117,9 @@
 - Tool: Codex
 - Task: Implement Follow and Unfollow end-to-end with service-built token/user DTO requests, facade response handling, backend services and handlers, and POST SAM routes. Remove placeholder delays, preserve the count tuple order, and document the current FakeData limitations; no tests were added.
 - Review: Reviewed and tested manually
+
+## 2026-11-14: tweeter-shared/src/model/net/request/PostStatusRequest.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/StatusService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/StatusService.ts, tweeter-server/src/handlers/status/PostStatusHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement the remaining Post Status endpoint with a shared status DTO request, service-built request, facade response handling, backend service and handler, and POST SAM route. Update documentation to describe the placeholder backend behavior and verify that all documented endpoints have configured routes and handler exports; no tests were added.
+- Review: Tested, works as expected.

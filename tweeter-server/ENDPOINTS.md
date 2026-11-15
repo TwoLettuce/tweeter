@@ -274,13 +274,17 @@ Method: POST
 Path: /status
 Body: {
   token: string,
-  newStatus: Status
+  newStatus: StatusDto
 }
 ```
 
-`Status` contains `post: string`, `user: UserDto`, and `timestamp: number`.
+`StatusDto` contains `post: string`, `user: UserDto`, and `timestamp: number`.
 
-Handler (to be created): `src/handlers/status/StatusPostHandler.ts`
+Handler: [PostStatusHandler](./src/handlers/status/PostStatusHandler.ts)
+
+The frontend service builds `PostStatusRequest` from the token and status DTO. The facade posts it to `/status` and checks the `TweeterResponse` before the existing presenter clears the composer and displays success.
+
+The backend currently acknowledges the request without storing the status or distributing it to followers' feeds. Token validation is not implemented yet, and feed/story retrieval still returns FakeData.
 
 Response: `{ "success": true, "message": null }`
 
