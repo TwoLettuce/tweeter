@@ -3,6 +3,9 @@ import {
   AuthToken,
   CountRequest,
   CountResponse,
+  FollowRequest,
+  UnfollowRequest,
+  FollowResponse,
   IsFollowerRequest,
   IsFollowerResponse,
   LoginRequest,
@@ -27,6 +30,36 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async follow(
+    req: FollowRequest,
+  ): Promise<[followerCount: number, followeeCount: number]> {
+    const res = await this.clientCommunicator.doPost<FollowRequest, FollowResponse>(
+      req,
+      "/follow",
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to follow user");
+    }
+
+    return [res.followerCount, res.followeeCount];
+  }
+
+  public async unfollow(
+    req: UnfollowRequest,
+  ): Promise<[followerCount: number, followeeCount: number]> {
+    const res = await this.clientCommunicator.doPost<
+      UnfollowRequest,
+      FollowResponse
+    >(req, "/unfollow");
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to unfollow user");
+    }
+
+    return [res.followerCount, res.followeeCount];
   }
 
   public async getFolloweeCount(req: CountRequest): Promise<number> {

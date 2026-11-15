@@ -238,7 +238,9 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/follow/FollowPostHandler.ts`
+Handler: [FollowHandler](./src/handlers/follow/FollowHandler.ts)
+
+The frontend service builds `FollowRequest` from the token and target user's DTO. The facade posts it to `/follow` and returns the counts from `FollowResponse` in follower-count, followee-count order.
 
 Response: `{ "success": true, "message": null, "followerCount": 0, "followeeCount": 0 }`
 
@@ -255,9 +257,13 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/follow/UnfollowPostHandler.ts`
+Handler: [UnfollowHandler](./src/handlers/follow/UnfollowHandler.ts)
+
+The frontend service builds `UnfollowRequest` and the facade posts it to `/unfollow`. This endpoint also uses `FollowResponse` for the two returned counts.
 
 Response: Same follower and followee count payload as Follow.
+
+Both endpoints currently return backend FakeData counts for the target user. They do not yet persist relationship changes or validate tokens.
 
 ### Post Status
 

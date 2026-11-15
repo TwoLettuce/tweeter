@@ -1,5 +1,5 @@
 // AI-assisted: see AI-ATTRIBUTION.md
-import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
+import { FakeData, User, UserDto } from "tweeter-shared";
 
 export class FollowService {
   public async loadMoreFollowees(
@@ -60,20 +60,17 @@ export class FollowService {
   }
 
   public async follow(
-    authToken: AuthToken,
-    userToFollow: User,
+    token: string,
+    userToFollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the follow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server
+    // Persist the follow relationship here when storage is implemented.
 
     const followerCount = await this.getFollowerCount(
-      authToken.token,
+      token,
       userToFollow.alias,
     );
     const followeeCount = await this.getFolloweeCount(
-      authToken.token,
+      token,
       userToFollow.alias,
     );
 
@@ -81,20 +78,17 @@ export class FollowService {
   }
 
   public async unfollow(
-    authToken: AuthToken,
-    userToUnfollow: User,
+    token: string,
+    userToUnfollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the unfollow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server
+    // Remove the follow relationship here when storage is implemented.
 
     const followerCount = await this.getFollowerCount(
-      authToken.token,
+      token,
       userToUnfollow.alias,
     );
     const followeeCount = await this.getFolloweeCount(
-      authToken.token,
+      token,
       userToUnfollow.alias,
     );
 

@@ -111,3 +111,9 @@
 - Tool: Codex
 - Task: Implement Get Followee Count and Get Follower Count end-to-end with shared count request/response types, service-built requests, facade handling, backend FakeData counts and handlers, and POST SAM routes. Update existing backend count callers and endpoint documentation; no tests were added.
 - Review: Manually tested. Works as expected
+
+## 2026-11-14: tweeter-shared/src/model/net/request/FollowRequest.ts (new file), tweeter-shared/src/model/net/request/UnfollowRequest.ts (new file), tweeter-shared/src/model/net/response/FollowResponse.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/handlers/follow/FollowHandler.ts (new file), tweeter-server/src/handlers/follow/UnfollowHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Follow and Unfollow end-to-end with service-built token/user DTO requests, facade response handling, backend services and handlers, and POST SAM routes. Remove placeholder delays, preserve the count tuple order, and document the current FakeData limitations; no tests were added.
+- Review: Reviewed and tested manually
