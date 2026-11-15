@@ -12,6 +12,7 @@ import {
   LoginRequest,
   LoginResponse,
   LogoutRequest,
+  TweeterRequest,
   TweeterResponse,
   RegisterRequest,
   RegisterResponse,
@@ -25,8 +26,10 @@ import {
   UserResponse,
 } from "tweeter-shared";
 import { ClientCommunicator } from "./ClientCommunicator";
+
 export class ServerFacade {
   private clientCommunicator: ClientCommunicator;
+
   public constructor() {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
@@ -34,219 +37,159 @@ export class ServerFacade {
   }
 
   public async postStatus(req: PostStatusRequest): Promise<void> {
-    const res = await this.clientCommunicator.doPost<
-      PostStatusRequest,
-      TweeterResponse
-    >(req, "/status");
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to post status");
-    }
+    await this.post<PostStatusRequest, TweeterResponse>(
+      req,
+      "/status",
+      "Failed to post status",
+    );
   }
 
   public async follow(
     req: FollowRequest,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    const res = await this.clientCommunicator.doPost<FollowRequest, FollowResponse>(
+    const res = await this.post<FollowRequest, FollowResponse>(
       req,
       "/follow",
+      "Failed to follow user",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to follow user");
-    }
-
     return [res.followerCount, res.followeeCount];
   }
 
   public async unfollow(
     req: UnfollowRequest,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    const res = await this.clientCommunicator.doPost<
-      UnfollowRequest,
-      FollowResponse
-    >(req, "/unfollow");
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to unfollow user");
-    }
-
+    const res = await this.post<UnfollowRequest, FollowResponse>(
+      req,
+      "/unfollow",
+      "Failed to unfollow user",
+    );
     return [res.followerCount, res.followeeCount];
   }
 
   public async getFolloweeCount(req: CountRequest): Promise<number> {
-    const res = await this.clientCommunicator.doPost<CountRequest, CountResponse>(
+    const res = await this.post<CountRequest, CountResponse>(
       req,
       `/followeecount/${encodeURIComponent(req.alias)}`,
+      "Failed to get followee count",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to get followee count");
-    }
-
     return res.count;
   }
 
   public async getFollowerCount(req: CountRequest): Promise<number> {
-    const res = await this.clientCommunicator.doPost<CountRequest, CountResponse>(
+    const res = await this.post<CountRequest, CountResponse>(
       req,
       `/followercount/${encodeURIComponent(req.alias)}`,
+      "Failed to get follower count",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to get follower count");
-    }
-
     return res.count;
   }
 
   public async getIsFollowerStatus(req: IsFollowerRequest): Promise<boolean> {
-    const res = await this.clientCommunicator.doPost<
-      IsFollowerRequest,
-      IsFollowerResponse
-    >(
+    const res = await this.post<IsFollowerRequest, IsFollowerResponse>(
       req,
       `/isfollower/${encodeURIComponent(req.alias)}/${encodeURIComponent(req.selectedAlias)}`,
+      "Failed to get follower status",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to get follower status");
-    }
-
     return res.isFollower;
   }
 
   public async getUser(req: UserRequest): Promise<User | null> {
-    const res = await this.clientCommunicator.doPost<UserRequest, UserResponse>(
+    const res = await this.post<UserRequest, UserResponse>(
       req,
       `/user/${encodeURIComponent(req.alias)}`,
+      "Failed to get user",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to get user");
-    }
-
     return res.user === null ? null : User.fromDto(res.user);
   }
 
   public async login(req: LoginRequest): Promise<[User, AuthToken]> {
-    const res = await this.clientCommunicator.doPost<LoginRequest, LoginResponse>(
+    const res = await this.post<LoginRequest, LoginResponse>(
       req,
       "/login",
+      "Failed to log in",
     );
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to log in");
-    }
-
-    if (res.user == null || res.authToken == null) {
-      throw new Error("Login response is missing the user or auth token");
-    }
-
-    return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
+    return this.getAuthenticatedUser(res, "Login");
   }
 
   public async register(req: RegisterRequest): Promise<[User, AuthToken]> {
-    const res = await this.clientCommunicator.doPost<
-      RegisterRequest,
-      RegisterResponse
-    >(req, "/register");
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to register");
-    }
-
-    if (res.user == null || res.authToken == null) {
-      throw new Error("Register response is missing the user or auth token");
-    }
-
-    return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
+    const res = await this.post<RegisterRequest, RegisterResponse>(
+      req,
+      "/register",
+      "Failed to register",
+    );
+    return this.getAuthenticatedUser(res, "Register");
   }
 
   public async logout(req: LogoutRequest): Promise<void> {
-    const res = await this.clientCommunicator.doPost<LogoutRequest, TweeterResponse>(
+    await this.post<LogoutRequest, TweeterResponse>(
       req,
       "/logout",
+      "Failed to log out",
+    );
+  }
+
+  public loadMoreFollowees(
+    req: PagedItemRequest<UserDto>,
+  ): Promise<[User[], boolean]> {
+    return this.loadPage(req, "followees", User.fromDto);
+  }
+
+  public loadMoreFollowers(
+    req: PagedItemRequest<UserDto>,
+  ): Promise<[User[], boolean]> {
+    return this.loadPage(req, "followers", User.fromDto);
+  }
+
+  public loadMoreFeedItems(
+    req: PagedItemRequest<StatusDto>,
+  ): Promise<[Status[], boolean]> {
+    return this.loadPage(req, "feed", Status.fromDto);
+  }
+
+  public loadMoreStoryItems(
+    req: PagedItemRequest<StatusDto>,
+  ): Promise<[Status[], boolean]> {
+    return this.loadPage(req, "story", Status.fromDto);
+  }
+
+  private async post<REQ extends TweeterRequest, RES extends TweeterResponse>(
+    req: REQ,
+    endpoint: string,
+    failureMessage: string,
+  ): Promise<RES> {
+    const res = await this.clientCommunicator.doPost<REQ, RES>(req, endpoint);
+    if (!res.success) {
+      throw new Error(res.message ?? failureMessage);
+    }
+    return res;
+  }
+
+  private async loadPage<DTO, ITEM>(
+    req: PagedItemRequest<DTO>,
+    resource: "followees" | "followers" | "feed" | "story",
+    fromDto: (dto: DTO) => ITEM,
+  ): Promise<[ITEM[], boolean]> {
+    const res = await this.post<PagedItemRequest<DTO>, PagedItemResponse<DTO>>(
+      req,
+      `/${resource}/${encodeURIComponent(req.userAlias)}`,
+      `Failed to load ${resource}`,
     );
 
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to log out");
+    if (res.items === null) {
+      const label = resource[0].toUpperCase() + resource.slice(1);
+      throw new Error(`${label} response is missing items`);
     }
+
+    return [res.items.map(fromDto), res.hasMore];
   }
 
-  public async loadMoreFollowees(
-    req: PagedItemRequest<UserDto>,
-  ): Promise<[User[], boolean]> {
-    const res = await this.clientCommunicator.doPost<
-      PagedItemRequest<UserDto>,
-      PagedItemResponse<UserDto>
-    >(req, `/followees/${encodeURIComponent(req.userAlias)}`);
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to load followees");
+  private getAuthenticatedUser(
+    res: LoginResponse | RegisterResponse,
+    operation: "Login" | "Register",
+  ): [User, AuthToken] {
+    if (res.user == null || res.authToken == null) {
+      throw new Error(`${operation} response is missing the user or auth token`);
     }
-
-    if (res.items === null) {
-      throw new Error("Followees response is missing items");
-    }
-
-    return [res.items.map((dto) => User.fromDto(dto)), res.hasMore];
-  }
-
-  public async loadMoreFollowers(
-    req: PagedItemRequest<UserDto>,
-  ): Promise<[User[], boolean]> {
-    const res = await this.clientCommunicator.doPost<
-      PagedItemRequest<UserDto>,
-      PagedItemResponse<UserDto>
-    >(req, `/followers/${encodeURIComponent(req.userAlias)}`);
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to load followers");
-    }
-
-    if (res.items === null) {
-      throw new Error("Followers response is missing items");
-    }
-
-    return [res.items.map((dto) => User.fromDto(dto)), res.hasMore];
-  }
-
-  public async loadMoreFeedItems(
-    req: PagedItemRequest<StatusDto>,
-  ): Promise<[Status[], boolean]> {
-    const res = await this.clientCommunicator.doPost<
-      PagedItemRequest<StatusDto>,
-      PagedItemResponse<StatusDto>
-    >(req, `/feed/${encodeURIComponent(req.userAlias)}`);
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to load feed");
-    }
-
-    if (res.items === null) {
-      throw new Error("Feed response is missing items");
-    }
-
-    return [res.items.map((dto) => Status.fromDto(dto)), res.hasMore];
-  }
-
-  public async loadMoreStoryItems(
-    req: PagedItemRequest<StatusDto>,
-  ): Promise<[Status[], boolean]> {
-    const res = await this.clientCommunicator.doPost<
-      PagedItemRequest<StatusDto>,
-      PagedItemResponse<StatusDto>
-    >(req, `/story/${encodeURIComponent(req.userAlias)}`);
-
-    if (!res.success) {
-      throw new Error(res.message ?? "Failed to load story");
-    }
-
-    if (res.items === null) {
-      throw new Error("Story response is missing items");
-    }
-
-    return [res.items.map((dto) => Status.fromDto(dto)), res.hasMore];
+    return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
   }
 }

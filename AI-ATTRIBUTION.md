@@ -123,3 +123,9 @@
 - Tool: Codex
 - Task: Implement the remaining Post Status endpoint with a shared status DTO request, service-built request, facade response handling, backend service and handler, and POST SAM route. Update documentation to describe the placeholder backend behavior and verify that all documented endpoints have configured routes and handler exports; no tests were added.
 - Review: Tested, works as expected.
+
+## 2026-11-14: tweeter-web/src/net/ServerFacade.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: De-duplicate ServerFacade while maintaining readability by extracting shared POST success checking, paged DTO conversion, and login/register response conversion. Preserve public method signatures, routes, returned values, and error messages.
+- Review: Code de-duplication is cleaner and still readable.
