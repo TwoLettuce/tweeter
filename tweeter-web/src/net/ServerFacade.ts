@@ -1,6 +1,8 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import {
   AuthToken,
+  IsFollowerRequest,
+  IsFollowerResponse,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -23,6 +25,22 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async getIsFollowerStatus(req: IsFollowerRequest): Promise<boolean> {
+    const res = await this.clientCommunicator.doPost<
+      IsFollowerRequest,
+      IsFollowerResponse
+    >(
+      req,
+      `/isfollower/${encodeURIComponent(req.alias)}/${encodeURIComponent(req.selectedAlias)}`,
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to get follower status");
+    }
+
+    return res.isFollower;
   }
 
   public async getUser(req: UserRequest): Promise<User | null> {

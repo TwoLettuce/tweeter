@@ -151,6 +151,19 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
+          /isfollower/{alias}/{selectedAlias}:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getIsFollower.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
           /followees/{alias}:
             post:
               consumes: *commonConsumes
@@ -273,6 +286,20 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /user/{alias}
+            Method: POST
+
+  getIsFollower:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getIsFollower
+      Handler: src/handlers/follow/IsFollowerGetHandler.isFollowerGetHandler
+      Policies: *commonPolicies
+      Events:
+        GetIsFollowerApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /isfollower/{alias}/{selectedAlias}
             Method: POST
 
   getFollowees:

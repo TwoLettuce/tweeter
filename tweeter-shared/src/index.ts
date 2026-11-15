@@ -17,6 +17,8 @@ export type { RegisterRequest } from "./model/net/request/RegisterRequest";
 export type { RegisterResponse } from "./model/net/response/RegisterResponse";
 export type { UserRequest } from "./model/net/request/UserRequest";
 export type { UserResponse } from "./model/net/response/UserResponse";
+export type { IsFollowerRequest } from "./model/net/request/IsFollowerRequest";
+export type { IsFollowerResponse } from "./model/net/response/IsFollowerResponse";
 export type { StatusDto } from "./model/dto/StatusDto";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";

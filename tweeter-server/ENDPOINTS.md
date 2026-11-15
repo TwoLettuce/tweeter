@@ -159,17 +159,23 @@ Response: Same paged UserDto response as Get Followees.
 
 ### Get Is Follower Status
 
+Like the other retrieval endpoints, this endpoint uses POST to carry its request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /isfollower/{alias}/{selectedAlias}
 Body: {
-  token: string
+  token: string,
+  alias: string,
+  selectedAlias: string
 }
 ```
 
-Handler (to be created): `src/handlers/follow/IsFollowerGetHandler.ts`
+Handler: [IsFollowerGetHandler](./src/handlers/follow/IsFollowerGetHandler.ts)
+
+The frontend service builds `IsFollowerRequest` using the current user's alias and the selected user's alias, which the facade also includes in the URL. The backend currently returns `FakeData.instance.isFollower()`, a random boolean; relationship lookup and token validation are not implemented yet.
 
 Response:
 

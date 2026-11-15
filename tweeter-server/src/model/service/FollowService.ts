@@ -1,3 +1,4 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
 
 export class FollowService {
@@ -34,11 +35,11 @@ export class FollowService {
   }
 
   public async getIsFollowerStatus(
-    authToken: AuthToken,
-    user: User,
-    selectedUser: User,
+    token: string,
+    alias: string,
+    selectedAlias: string,
   ): Promise<boolean> {
-    // TODO: Replace with the result of calling server
+    // Replace FakeData with a lookup of the relationship between these aliases.
     return FakeData.instance.isFollower();
   }
 

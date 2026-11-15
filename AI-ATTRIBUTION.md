@@ -93,3 +93,9 @@
 - Tool: Codex
 - Task: Implement Get User end-to-end with shared request/response types, service-built requests, facade DTO conversion, backend FakeData lookup and handler, and a POST SAM route. Preserve null for unknown aliases and update the endpoint documentation; no tests were added.
 - Review: Reviewed and tested manually. Working as expected.
+
+## 2026-11-14: tweeter-shared/src/model/net/request/IsFollowerRequest.ts (new file), tweeter-shared/src/model/net/response/IsFollowerResponse.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/handlers/follow/IsFollowerGetHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Get Is Follower Status end-to-end with shared request/response types, service-built requests containing both aliases, facade handling, backend FakeData service and handler, and a POST SAM route. Update documentation to describe the contract and random FakeData result; no tests were added.
+- Review: Reviewed and tested manually. Button state doesn't change until response from API call is received. TODO: disable button while waiting to transition between users.
