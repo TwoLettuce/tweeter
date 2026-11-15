@@ -7,7 +7,6 @@ export class FollowService {
     pageSize: number,
     lastFollowee: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
-    // TODO: Replace with the result of calling server
     return this.getFakeData(lastFollowee, pageSize, userAlias);
   }
 
@@ -17,7 +16,7 @@ export class FollowService {
     userAlias: string,
   ): Promise<[UserDto[], boolean]> {
     const [users, hasMore] = FakeData.instance.getPageOfUsers(
-      User.fromDto(lastItem),
+      lastItem ? User.fromDto(lastItem) : null,
       pageSize,
       userAlias,
     );

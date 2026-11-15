@@ -87,10 +87,12 @@ Response: `user` is a UserDto (`firstName`, `lastName`, `alias`, `imageUrl`), or
 
 ### Get Followees
 
+This retrieval endpoint uses POST to carry the paged request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /followees/{alias}
 Body: {
   token: string,
@@ -118,10 +120,12 @@ Response:
 
 ### Get Followers
 
+Like Get Followees, this retrieval endpoint uses POST to carry the paged request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /followers/{alias}
 Body: {
   token: string,
@@ -131,7 +135,8 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/followers/FollowersGetHandler.ts`
+Handler:
+[FollowersGetHandler](./src/handlers/followers/FollowersGetHandler.ts)
 
 Response: Same paged UserDto response as Get Followees.
 

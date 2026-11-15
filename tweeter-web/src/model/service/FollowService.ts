@@ -13,7 +13,7 @@ export class FollowService extends Service {
       token: token.token,
       userAlias: userAlias,
       pageSize: pageSize,
-      lastItem: lastFollowee?.dto,
+      lastItem: lastFollowee?.dto ?? null,
     };
     return await this.server.loadMoreFollowees(req);
   }
@@ -24,8 +24,13 @@ export class FollowService extends Service {
     pageSize: number,
     lastFollower: User | null,
   ): Promise<[User[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfUsers(lastFollower, pageSize, userAlias);
+    const req: PagedItemRequest<UserDto> = {
+      token: token.token,
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastFollower?.dto ?? null,
+    };
+    return await this.server.loadMoreFollowers(req);
   }
 
   public async getIsFollowerStatus(

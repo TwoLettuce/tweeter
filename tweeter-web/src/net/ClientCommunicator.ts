@@ -9,19 +9,6 @@ export class ClientCommunicator {
     this.SERVER_URL = SERVER_URL;
   }
 
-  public doGet<REQ extends TweeterRequest, RES extends TweeterResponse>(
-    req: REQ | undefined,
-    endpoint: string,
-    headers?: Headers,
-  ): Promise<RES> {
-    return this.doRequest<TweeterRequest, RES>(
-      HTTPMethod.GET,
-      req,
-      endpoint,
-      headers,
-    );
-  }
-
   public doPost<REQ extends TweeterRequest, RES extends TweeterResponse>(
     req: REQ | undefined,
     endpoint: string,

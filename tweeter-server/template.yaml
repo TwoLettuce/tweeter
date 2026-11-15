@@ -100,14 +100,27 @@ Resources:
           #
 
           /followees/{alias}:
-            get:
+            post:
               consumes: *commonConsumes
               produces: *commonProduces
               x-amazon-apigateway-integration:
                 type: aws
-                httpMethod: GET
+                httpMethod: POST
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getFollowees.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
+          /followers/{alias}:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getFollowers.Arn}/invocations
                 requestTemplates: *commonRequestTemplates
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
@@ -144,7 +157,21 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /followees/{alias}
-            Method: GET
+            Method: POST
+
+  getFollowers:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getFollowers
+      Handler: src/handlers/followers/FollowersGetHandler.followersGetHandler
+      Policies: *commonPolicies
+      Events:
+        GetFollowersApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /followers/{alias}
+            Method: POST
 
   #
   # TODO: ADD MORE WEB API LAMBDA DEFINITIONS HERE

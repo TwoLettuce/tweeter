@@ -44,4 +44,10 @@
 
 - Tool: Codex
 - Task: Move followee request construction into FollowService and update ServerFacade to accept the typed request object.
-- Review: Changes reviewd and approved
+- Review: Changes reviewed and approved
+
+## 2026-11-14: tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/handlers/followers/FollowersGetHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement the Get Followers endpoint using the existing paged request/response types and followees structure. Connect the frontend service, facade, backend handler, and SAM route; align both paged endpoints with POST for JSON request bodies.
+- Review: TODO
