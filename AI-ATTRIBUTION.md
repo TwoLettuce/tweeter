@@ -129,3 +129,9 @@
 - Tool: Codex
 - Task: De-duplicate ServerFacade while maintaining readability by extracting shared POST success checking, paged DTO conversion, and login/register response conversion. Preserve public method signatures, routes, returned values, and error messages.
 - Review: Code de-duplication is cleaner and still readable.
+
+## 2026-11-14: tweeter-web/test/net/ServerFacade.test.ts (new file), AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Add Jest integration tests that call the real client-side ServerFacade and deployed backend for Register, Get Followers, Get Follower Count, and Get Followee Count. Verify returned domain objects, follower pagination, and the current FakeData count ranges without mocking server communication.
+- Review: Tests are legible and easily understood.
