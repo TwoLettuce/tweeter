@@ -135,3 +135,9 @@
 - Tool: Codex
 - Task: Add Jest integration tests that call the real client-side ServerFacade and deployed backend for Register, Get Followers, Get Follower Count, and Get Followee Count. Verify returned domain objects, follower pagination, and the current FakeData count ranges without mocking server communication.
 - Review: Tests are legible and easily understood.
+
+## 2026-11-14: tweeter-web/test/tsconfig.json (new file), AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Fix missing Jest globals in IDE test files by adding a test-directory TypeScript configuration that extends the web configuration and includes Jest and Node types.
+- Review: IDE errors remedied
