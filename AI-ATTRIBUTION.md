@@ -105,3 +105,9 @@
 - Tool: Codex
 - Task: Rename resource-first Get handler files and exported functions to GetResource/getResource naming, updating SAM handler references and endpoint documentation, including planned count handlers.
 - Review: Reviewed. Appears to have only affected names. No testing required.
+
+## 2026-11-14: tweeter-shared/src/model/net/request/CountRequest.ts (new file), tweeter-shared/src/model/net/response/CountResponse.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/handlers/follow/GetFolloweeCountHandler.ts (new file), tweeter-server/src/handlers/follow/GetFollowerCountHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Get Followee Count and Get Follower Count end-to-end with shared count request/response types, service-built requests, facade handling, backend FakeData counts and handlers, and POST SAM routes. Update existing backend count callers and endpoint documentation; no tests were added.
+- Review: Manually tested. Works as expected

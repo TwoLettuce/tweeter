@@ -1,7 +1,7 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import {
   AuthToken,
-  FakeData,
+  CountRequest,
   IsFollowerRequest,
   PagedItemRequest,
   User,
@@ -57,16 +57,22 @@ export class FollowService extends Service {
     authToken: AuthToken,
     user: User,
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getFolloweeCount(user.alias);
+    const req: CountRequest = {
+      token: authToken.token,
+      alias: user.alias,
+    };
+    return await this.server.getFolloweeCount(req);
   }
 
   public async getFollowerCount(
     authToken: AuthToken,
     user: User,
   ): Promise<number> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getFollowerCount(user.alias);
+    const req: CountRequest = {
+      token: authToken.token,
+      alias: user.alias,
+    };
+    return await this.server.getFollowerCount(req);
   }
 
   public async follow(

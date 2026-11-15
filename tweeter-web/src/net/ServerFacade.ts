@@ -1,6 +1,8 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import {
   AuthToken,
+  CountRequest,
+  CountResponse,
   IsFollowerRequest,
   IsFollowerResponse,
   LoginRequest,
@@ -25,6 +27,32 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async getFolloweeCount(req: CountRequest): Promise<number> {
+    const res = await this.clientCommunicator.doPost<CountRequest, CountResponse>(
+      req,
+      `/followeecount/${encodeURIComponent(req.alias)}`,
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to get followee count");
+    }
+
+    return res.count;
+  }
+
+  public async getFollowerCount(req: CountRequest): Promise<number> {
+    const res = await this.clientCommunicator.doPost<CountRequest, CountResponse>(
+      req,
+      `/followercount/${encodeURIComponent(req.alias)}`,
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to get follower count");
+    }
+
+    return res.count;
   }
 
   public async getIsFollowerStatus(req: IsFollowerRequest): Promise<boolean> {

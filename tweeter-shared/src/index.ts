@@ -19,6 +19,8 @@ export type { UserRequest } from "./model/net/request/UserRequest";
 export type { UserResponse } from "./model/net/response/UserResponse";
 export type { IsFollowerRequest } from "./model/net/request/IsFollowerRequest";
 export type { IsFollowerResponse } from "./model/net/response/IsFollowerResponse";
+export type { CountRequest } from "./model/net/request/CountRequest";
+export type { CountResponse } from "./model/net/response/CountResponse";
 export type { StatusDto } from "./model/dto/StatusDto";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";

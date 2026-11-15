@@ -185,35 +185,45 @@ Response:
 
 ### Get Followee Count
 
+Like the other retrieval endpoints, this endpoint uses POST to carry its request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /followeecount/{alias}
 Body: {
-  token: string
+  token: string,
+  alias: string
 }
 ```
 
-Handler (to be created): `src/handlers/follow/GetFolloweeCountHandler.ts`
+Handler: [GetFolloweeCountHandler](./src/handlers/follow/GetFolloweeCountHandler.ts)
+
+The frontend service builds `CountRequest` with the token and user's alias. The facade posts it to the alias-specific URL and reads `count` from `CountResponse`.
 
 Response: `{ "success": true, "message": null, "count": 0 }`
 
 ### Get Follower Count
 
+Like Get Followee Count, this endpoint uses POST with a `CountRequest` body and returns `CountResponse`.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /followercount/{alias}
 Body: {
-  token: string
+  token: string,
+  alias: string
 }
 ```
 
-Handler (to be created): `src/handlers/follow/GetFollowerCountHandler.ts`
+Handler: [GetFollowerCountHandler](./src/handlers/follow/GetFollowerCountHandler.ts)
 
 Response: `{ "success": true, "message": null, "count": 0 }`
+
+Both count endpoints currently use backend `FakeData`, which returns random counts from 1 through 10. Stored relationship counts and token validation are not implemented yet.
 
 ### Follow
 
