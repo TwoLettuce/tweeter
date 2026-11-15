@@ -69,3 +69,15 @@
 - Tool: Codex
 - Task: Rewrite the status endpoint tests as a successful client-side StatusService story integration test against the deployed backend, without mocks. Configure Jest projects so network integration tests use Node's fetch while existing UI and presenter tests retain jsdom.
 - Review: Reviewed tests and ensured that I understand the testing framework and that it meets project specification
+
+## 2026-11-14: tweeter-shared/src/model/net/request/LoginRequest.ts (new file), tweeter-shared/src/model/net/response/LoginResponse.ts (new file), tweeter-shared/src/model/dto/AuthTokenDto.ts (new file), tweeter-shared/src/model/domain/AuthToken.ts, tweeter-shared/src/model/net/response/TweeterResponse.ts, tweeter-shared/src/index.ts, tweeter-web/src/model/service/UserService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-web/src/net/ClientCommunicator.ts, tweeter-server/src/model/service/UserService.ts (new file), tweeter-server/src/handlers/auth/LoginHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Login end-to-end using shared request/response types, token DTO conversion, frontend service and facade, backend FakeData service and handler, and a POST SAM route. Update the endpoint documentation and remove request-body logging to avoid printing passwords; no tests were added.
+- Review: Login tested manually, functions as expected.
+
+## 2026-11-14: tweeter-shared/src/model/net/request/RegisterRequest.ts (new file), tweeter-shared/src/model/net/response/RegisterResponse.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/UserService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/UserService.ts, tweeter-server/src/handlers/auth/RegisterHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Register end-to-end following Login, including shared request/response types, base64 image request construction, facade DTO conversion, backend FakeData service and handler, and a POST SAM route. Document the current FakeData limitations; no tests were added.
+- Review: TODO
