@@ -125,6 +125,19 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
+          /logout:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${logout.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
           /followees/{alias}:
             post:
               consumes: *commonConsumes
@@ -219,6 +232,20 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /register
+            Method: POST
+
+  logout:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: logout
+      Handler: src/handlers/auth/LogoutHandler.logoutHandler
+      Policies: *commonPolicies
+      Events:
+        LogoutApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /logout
             Method: POST
 
   getFollowees:

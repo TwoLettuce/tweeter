@@ -80,4 +80,10 @@
 
 - Tool: Codex
 - Task: Implement Register end-to-end following Login, including shared request/response types, base64 image request construction, facade DTO conversion, backend FakeData service and handler, and a POST SAM route. Document the current FakeData limitations; no tests were added.
-- Review: TODO
+- Review: Tested manulaly, functions as expected
+
+## 2026-11-14: tweeter-shared/src/model/net/request/LogoutRequest.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/UserService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/UserService.ts, tweeter-server/src/handlers/auth/LogoutHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Logout end-to-end with a service-built token request, facade response handling, backend service and handler, and a POST SAM route. Document that token revocation awaits persistent authentication; no tests were added.
+- Review: Tested manually, produced an error that was unreproducible, likely because AWS hadn't finished configuring yet.

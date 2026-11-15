@@ -5,6 +5,7 @@ import {
   User,
   FakeData,
   LoginRequest,
+  LogoutRequest,
   RegisterRequest,
 } from "tweeter-shared";
 import { Service } from "./Service";
@@ -52,7 +53,9 @@ export class UserService extends Service {
   }
 
   public async logout(authToken: AuthToken): Promise<void> {
-    // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    const req: LogoutRequest = {
+      token: authToken.token,
+    };
+    await this.server.logout(req);
   }
 }

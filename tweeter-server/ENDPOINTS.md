@@ -69,7 +69,11 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/auth/LogoutHandler.ts`
+Handler: [LogoutHandler](./src/handlers/auth/LogoutHandler.ts)
+
+The frontend service builds `LogoutRequest` from the auth token. The facade posts it to `/logout` and checks the `TweeterResponse` before allowing the existing presenter to clear the local user session.
+
+The backend currently acknowledges logout without invalidating the token, since token storage and validation have not been implemented yet.
 
 Response:
 

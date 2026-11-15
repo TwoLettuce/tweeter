@@ -3,6 +3,8 @@ import {
   AuthToken,
   LoginRequest,
   LoginResponse,
+  LogoutRequest,
+  TweeterResponse,
   RegisterRequest,
   RegisterResponse,
   PagedItemRequest,
@@ -53,6 +55,17 @@ export class ServerFacade {
     }
 
     return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
+  }
+
+  public async logout(req: LogoutRequest): Promise<void> {
+    const res = await this.clientCommunicator.doPost<LogoutRequest, TweeterResponse>(
+      req,
+      "/logout",
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to log out");
+    }
   }
 
   public async loadMoreFollowees(
