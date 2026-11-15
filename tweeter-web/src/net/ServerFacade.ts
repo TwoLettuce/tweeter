@@ -1,5 +1,10 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import {
+  AuthToken,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
   PagedItemRequest,
   PagedItemResponse,
   Status,
@@ -14,6 +19,40 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async login(req: LoginRequest): Promise<[User, AuthToken]> {
+    const res = await this.clientCommunicator.doPost<LoginRequest, LoginResponse>(
+      req,
+      "/login",
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to log in");
+    }
+
+    if (res.user == null || res.authToken == null) {
+      throw new Error("Login response is missing the user or auth token");
+    }
+
+    return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
+  }
+
+  public async register(req: RegisterRequest): Promise<[User, AuthToken]> {
+    const res = await this.clientCommunicator.doPost<
+      RegisterRequest,
+      RegisterResponse
+    >(req, "/register");
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to register");
+    }
+
+    if (res.user == null || res.authToken == null) {
+      throw new Error("Register response is missing the user or auth token");
+    }
+
+    return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
   }
 
   public async loadMoreFollowees(

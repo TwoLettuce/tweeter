@@ -1,5 +1,12 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { Buffer } from "buffer";
-import { AuthToken, User, FakeData } from "tweeter-shared";
+import {
+  AuthToken,
+  User,
+  FakeData,
+  LoginRequest,
+  RegisterRequest,
+} from "tweeter-shared";
 import { Service } from "./Service";
 
 export class UserService extends Service {
@@ -19,32 +26,29 @@ export class UserService extends Service {
     userImageBytes: Uint8Array,
     imageFileExtension: string,
   ): Promise<[User, AuthToken]> {
-    // Not neded now, but will be needed when you make the request to the server in milestone 3
     const imageStringBase64: string =
       Buffer.from(userImageBytes).toString("base64");
 
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid registration");
-    }
-
-    return [user, FakeData.instance.authToken];
+    const req: RegisterRequest = {
+      firstName: firstName,
+      lastName: lastName,
+      alias: alias,
+      password: password,
+      userImageBytes: imageStringBase64,
+      imageFileExtension: imageFileExtension,
+    };
+    return await this.server.register(req);
   }
 
   public async login(
     alias: string,
     password: string,
   ): Promise<[User, AuthToken]> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid alias or password");
-    }
-
-    return [user, FakeData.instance.authToken];
+    const req: LoginRequest = {
+      alias: alias,
+      password: password,
+    };
+    return await this.server.login(req);
   }
 
   public async logout(authToken: AuthToken): Promise<void> {

@@ -15,7 +15,11 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/auth/LoginHandler.ts`
+Handler: [LoginHandler](./src/handlers/auth/LoginHandler.ts)
+
+The frontend service builds `LoginRequest`. The facade sends it to the server and converts the returned user and token DTOs into `User` and `AuthToken` objects.
+
+The backend currently preserves the original FakeData login behavior: it returns the first fake user and a newly generated auth token. It does not validate the supplied alias or password yet.
 
 Response:
 
@@ -45,7 +49,11 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/auth/RegisterHandler.ts`
+Handler: [RegisterHandler](./src/handlers/auth/RegisterHandler.ts)
+
+The frontend service base64-encodes the image bytes and builds `RegisterRequest`. The facade posts it to `/register` and converts the returned user and token DTOs into `User` and `AuthToken` objects.
+
+The backend currently preserves the original FakeData registration behavior: it returns the first fake user and a newly generated auth token. It does not yet store account details, validate credentials, or upload the supplied image.
 
 Response: Same user and `authToken` payload as Login.
 
