@@ -96,7 +96,7 @@ Body: {
 }
 ```
 
-Handler: [UserGetHandler](./src/handlers/user/UserGetHandler.ts)
+Handler: [GetUserHandler](./src/handlers/user/GetUserHandler.ts)
 
 The frontend service builds `UserRequest`, using the same alias in the body and URL. The backend looks up that alias in `FakeData`; token validation is not implemented yet. The facade converts a returned user DTO into a `User` object and preserves `null` when no user exists.
 
@@ -120,7 +120,7 @@ Body: {
 ```
 
 Handler:
-[FolloweesGetHandler](./src/handlers/followees/FolloweesGetHandler.ts)
+[GetFolloweesHandler](./src/handlers/followees/GetFolloweesHandler.ts)
 
 Response:
 
@@ -153,7 +153,7 @@ Body: {
 ```
 
 Handler:
-[FollowersGetHandler](./src/handlers/followers/FollowersGetHandler.ts)
+[GetFollowersHandler](./src/handlers/followers/GetFollowersHandler.ts)
 
 Response: Same paged UserDto response as Get Followees.
 
@@ -173,7 +173,7 @@ Body: {
 }
 ```
 
-Handler: [IsFollowerGetHandler](./src/handlers/follow/IsFollowerGetHandler.ts)
+Handler: [GetIsFollowerHandler](./src/handlers/follow/GetIsFollowerHandler.ts)
 
 The frontend service builds `IsFollowerRequest` using the current user's alias and the selected user's alias, which the facade also includes in the URL. The backend currently returns `FakeData.instance.isFollower()`, a random boolean; relationship lookup and token validation are not implemented yet.
 
@@ -195,7 +195,7 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/follow/FolloweeCountGetHandler.ts`
+Handler (to be created): `src/handlers/follow/GetFolloweeCountHandler.ts`
 
 Response: `{ "success": true, "message": null, "count": 0 }`
 
@@ -211,7 +211,7 @@ Body: {
 }
 ```
 
-Handler (to be created): `src/handlers/follow/FollowerCountGetHandler.ts`
+Handler (to be created): `src/handlers/follow/GetFollowerCountHandler.ts`
 
 Response: `{ "success": true, "message": null, "count": 0 }`
 
@@ -287,7 +287,7 @@ Body: {
 
 `StatusDto` contains `post: string`, `user: UserDto`, and `timestamp: number`.
 
-Handler: [FeedGetHandler](./src/handlers/status/FeedGetHandler.ts)
+Handler: [GetFeedHandler](./src/handlers/status/GetFeedHandler.ts)
 
 Response: A paged response with `items: StatusDto[]` and `hasMore: boolean`. The facade converts these DTOs into `Status` objects.
 
@@ -308,7 +308,7 @@ Body: {
 }
 ```
 
-Handler: [StoryGetHandler](./src/handlers/status/StoryGetHandler.ts)
+Handler: [GetStoryHandler](./src/handlers/status/GetStoryHandler.ts)
 
 Response: Same paged `StatusDto` response as Get Feed.
 

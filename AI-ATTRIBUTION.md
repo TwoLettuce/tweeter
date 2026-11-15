@@ -99,3 +99,9 @@
 - Tool: Codex
 - Task: Implement Get Is Follower Status end-to-end with shared request/response types, service-built requests containing both aliases, facade handling, backend FakeData service and handler, and a POST SAM route. Update documentation to describe the contract and random FakeData result; no tests were added.
 - Review: Reviewed and tested manually. Button state doesn't change until response from API call is received. TODO: disable button while waiting to transition between users.
+
+## 2026-11-14: tweeter-server/src/handlers/followees/FolloweesGetHandler.ts -> tweeter-server/src/handlers/followees/GetFolloweesHandler.ts (renamed), tweeter-server/src/handlers/followers/FollowersGetHandler.ts -> tweeter-server/src/handlers/followers/GetFollowersHandler.ts (renamed), tweeter-server/src/handlers/user/UserGetHandler.ts -> tweeter-server/src/handlers/user/GetUserHandler.ts (renamed), tweeter-server/src/handlers/follow/IsFollowerGetHandler.ts -> tweeter-server/src/handlers/follow/GetIsFollowerHandler.ts (renamed), tweeter-server/src/handlers/status/FeedGetHandler.ts -> tweeter-server/src/handlers/status/GetFeedHandler.ts (renamed), tweeter-server/src/handlers/status/StoryGetHandler.ts -> tweeter-server/src/handlers/status/GetStoryHandler.ts (renamed), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Rename resource-first Get handler files and exported functions to GetResource/getResource naming, updating SAM handler references and endpoint documentation, including planned count handlers.
+- Review: Reviewed. Appears to have only affected names. No testing required.

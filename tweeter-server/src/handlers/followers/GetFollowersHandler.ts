@@ -1,11 +1,12 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { PagedItemRequest, PagedItemResponse, UserDto } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
 
-export const followeesGetHandler = async (
+export const getFollowersHandler = async (
   request: PagedItemRequest<UserDto>,
 ): Promise<PagedItemResponse<UserDto>> => {
   const followService = new FollowService();
-  const [items, hasMore] = await followService.loadMoreFollowees(
+  const [items, hasMore] = await followService.loadMoreFollowers(
     request.token,
     request.userAlias,
     request.pageSize,

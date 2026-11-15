@@ -2,7 +2,7 @@
 import { PagedItemRequest, PagedItemResponse, StatusDto } from "tweeter-shared";
 import { StatusService } from "../../model/service/StatusService";
 
-export const storyGetHandler = async (
+export const getStoryHandler = async (
   request: PagedItemRequest<StatusDto>,
 ): Promise<PagedItemResponse<StatusDto>> => {
   const statusService = new StatusService();

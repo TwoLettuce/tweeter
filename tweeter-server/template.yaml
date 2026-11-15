@@ -278,7 +278,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getUser
-      Handler: src/handlers/user/UserGetHandler.userGetHandler
+      Handler: src/handlers/user/GetUserHandler.getUserHandler
       Policies: *commonPolicies
       Events:
         GetUserApi:
@@ -292,7 +292,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getIsFollower
-      Handler: src/handlers/follow/IsFollowerGetHandler.isFollowerGetHandler
+      Handler: src/handlers/follow/GetIsFollowerHandler.getIsFollowerHandler
       Policies: *commonPolicies
       Events:
         GetIsFollowerApi:
@@ -306,7 +306,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getFollowees
-      Handler: src/handlers/followees/FolloweesGetHandler.followeesGetHandler
+      Handler: src/handlers/followees/GetFolloweesHandler.getFolloweesHandler
       Policies: *commonPolicies
       Events:
         GetFolloweesApi:
@@ -320,7 +320,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getFollowers
-      Handler: src/handlers/followers/FollowersGetHandler.followersGetHandler
+      Handler: src/handlers/followers/GetFollowersHandler.getFollowersHandler
       Policies: *commonPolicies
       Events:
         GetFollowersApi:
@@ -334,7 +334,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getFeed
-      Handler: src/handlers/status/FeedGetHandler.feedGetHandler
+      Handler: src/handlers/status/GetFeedHandler.getFeedHandler
       Policies: *commonPolicies
       Events:
         GetFeedApi:
@@ -348,7 +348,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: getStory
-      Handler: src/handlers/status/StoryGetHandler.storyGetHandler
+      Handler: src/handlers/status/GetStoryHandler.getStoryHandler
       Policies: *commonPolicies
       Events:
         GetStoryApi:
