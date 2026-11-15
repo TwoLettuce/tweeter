@@ -13,6 +13,8 @@ import {
   StatusDto,
   User,
   UserDto,
+  UserRequest,
+  UserResponse,
 } from "tweeter-shared";
 import { ClientCommunicator } from "./ClientCommunicator";
 export class ServerFacade {
@@ -21,6 +23,19 @@ export class ServerFacade {
     this.clientCommunicator = new ClientCommunicator(
       "https://yhfxfip4o4.execute-api.us-east-2.amazonaws.com/prod",
     );
+  }
+
+  public async getUser(req: UserRequest): Promise<User | null> {
+    const res = await this.clientCommunicator.doPost<UserRequest, UserResponse>(
+      req,
+      `/user/${encodeURIComponent(req.alias)}`,
+    );
+
+    if (!res.success) {
+      throw new Error(res.message ?? "Failed to get user");
+    }
+
+    return res.user === null ? null : User.fromDto(res.user);
   }
 
   public async login(req: LoginRequest): Promise<[User, AuthToken]> {

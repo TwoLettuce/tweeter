@@ -3,7 +3,7 @@ import { Buffer } from "buffer";
 import {
   AuthToken,
   User,
-  FakeData,
+  UserRequest,
   LoginRequest,
   LogoutRequest,
   RegisterRequest,
@@ -15,8 +15,11 @@ export class UserService extends Service {
     authToken: AuthToken,
     alias: string,
   ): Promise<User | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    const req: UserRequest = {
+      token: authToken.token,
+      alias: alias,
+    };
+    return await this.server.getUser(req);
   }
 
   public async register(

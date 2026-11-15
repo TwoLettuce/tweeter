@@ -15,6 +15,8 @@ export type { LogoutRequest } from "./model/net/request/LogoutRequest";
 export type { LoginResponse } from "./model/net/response/LoginResponse";
 export type { RegisterRequest } from "./model/net/request/RegisterRequest";
 export type { RegisterResponse } from "./model/net/response/RegisterResponse";
+export type { UserRequest } from "./model/net/request/UserRequest";
+export type { UserResponse } from "./model/net/response/UserResponse";
 export type { StatusDto } from "./model/dto/StatusDto";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";

@@ -83,17 +83,22 @@ Response:
 
 ### Get User
 
+Like the other retrieval endpoints, this endpoint uses POST to carry its request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /user/{alias}
 Body: {
-  token: string
+  token: string,
+  alias: string
 }
 ```
 
-Handler (to be created): `src/handlers/user/UserGetHandler.ts`
+Handler: [UserGetHandler](./src/handlers/user/UserGetHandler.ts)
+
+The frontend service builds `UserRequest`, using the same alias in the body and URL. The backend looks up that alias in `FakeData`; token validation is not implemented yet. The facade converts a returned user DTO into a `User` object and preserves `null` when no user exists.
 
 Response: `user` is a UserDto (`firstName`, `lastName`, `alias`, `imageUrl`), or `null` if no user exists.
 

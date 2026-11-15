@@ -2,6 +2,11 @@
 import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
 
 export class UserService {
+  public async getUser(token: string, alias: string): Promise<UserDto | null> {
+    const user = FakeData.instance.findUserByAlias(alias);
+    return user?.dto ?? null;
+  }
+
   public async logout(token: string): Promise<void> {
     // No token store exists yet. Invalidate the token here when persistence is added.
   }

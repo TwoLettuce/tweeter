@@ -138,6 +138,19 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
+          /user/{alias}:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getUser.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
           /followees/{alias}:
             post:
               consumes: *commonConsumes
@@ -246,6 +259,20 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /logout
+            Method: POST
+
+  getUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getUser
+      Handler: src/handlers/user/UserGetHandler.userGetHandler
+      Policies: *commonPolicies
+      Events:
+        GetUserApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /user/{alias}
             Method: POST
 
   getFollowees:

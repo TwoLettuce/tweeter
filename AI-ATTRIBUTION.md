@@ -87,3 +87,9 @@
 - Tool: Codex
 - Task: Implement Logout end-to-end with a service-built token request, facade response handling, backend service and handler, and a POST SAM route. Document that token revocation awaits persistent authentication; no tests were added.
 - Review: Tested manually, produced an error that was unreproducible, likely because AWS hadn't finished configuring yet.
+
+## 2026-11-14: tweeter-shared/src/model/net/request/UserRequest.ts (new file), tweeter-shared/src/model/net/response/UserResponse.ts (new file), tweeter-shared/src/index.ts, tweeter-web/src/model/service/UserService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/UserService.ts, tweeter-server/src/handlers/user/UserGetHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Get User end-to-end with shared request/response types, service-built requests, facade DTO conversion, backend FakeData lookup and handler, and a POST SAM route. Preserve null for unknown aliases and update the endpoint documentation; no tests were added.
+- Review: Reviewed and tested manually. Working as expected.
