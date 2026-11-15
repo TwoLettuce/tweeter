@@ -50,4 +50,22 @@
 
 - Tool: Codex
 - Task: Implement the Get Followers endpoint using the existing paged request/response types and followees structure. Connect the frontend service, facade, backend handler, and SAM route; align both paged endpoints with POST for JSON request bodies.
-- Review: TODO
+- Review: Tested Manually, functioning as expected
+
+## 2026-11-14: tweeter-shared/src/model/dto/StatusDto.ts (new file), tweeter-shared/src/model/domain/Status.ts, tweeter-shared/src/index.ts, tweeter-web/src/model/service/StatusService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/model/service/StatusService.ts (new file), tweeter-server/src/handlers/status/FeedGetHandler.ts (new file), tweeter-server/src/handlers/status/StoryGetHandler.ts (new file), tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, tweeter-web/test/net/StatusEndpoints.test.ts (new file), AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Implement Get Feed and Get Story end-to-end following the followers structure, with shared status DTOs, frontend request construction, facade conversion, backend pagination and handlers, POST routes, and updated contracts. Add tests for pagination across JSON boundaries, domain reconstruction, empty pages, and failures.
+- Review: Tested Manually, small bug where first 20 statuses were repeated but unable to replicate or find cause.
+
+## 2026-11-14: start-dev.ps1 (new file), AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Create start-dev.ps1 to build tweeter-shared, build tweeter-web, and start tweeter-web in order, stopping if a command fails.
+- Review: script tested and working as expected
+
+## 2026-11-14: tweeter-web/test/net/StatusEndpoints.test.ts, tweeter-web/package.json, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Rewrite the status endpoint tests as a successful client-side StatusService story integration test against the deployed backend, without mocks. Configure Jest projects so network integration tests use Node's fetch while existing UI and presenter tests retain jsdom.
+- Review: Reviewed tests and ensured that I understand the testing framework and that it meets project specification

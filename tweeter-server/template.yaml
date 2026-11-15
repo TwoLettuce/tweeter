@@ -125,9 +125,31 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
-            #
-            # TODO: ADD MORE ENDPOINT DEFINITIONS HERE
-            #
+          /feed/{alias}:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getFeed.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
+
+          /story/{alias}:
+            post:
+              consumes: *commonConsumes
+              produces: *commonProduces
+              x-amazon-apigateway-integration:
+                type: aws
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${getStory.Arn}/invocations
+                requestTemplates: *commonRequestTemplates
+                responses: *commonAmazonResponses
+              responses: *commonSwaggerResponses
   #
   # Lambda Layer (reused by all Lambda functions)
   #
@@ -171,6 +193,34 @@ Resources:
           Properties:
             RestApiId: !Ref tweeterApi
             Path: /followers/{alias}
+            Method: POST
+
+  getFeed:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getFeed
+      Handler: src/handlers/status/FeedGetHandler.feedGetHandler
+      Policies: *commonPolicies
+      Events:
+        GetFeedApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /feed/{alias}
+            Method: POST
+
+  getStory:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: getStory
+      Handler: src/handlers/status/StoryGetHandler.storyGetHandler
+      Policies: *commonPolicies
+      Events:
+        GetStoryApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref tweeterApi
+            Path: /story/{alias}
             Method: POST
 
   #

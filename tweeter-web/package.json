@@ -68,17 +68,32 @@
   },
   "jest": {
     "verbose": true,
-    "testEnvironment": "jsdom",
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js"
-    },
-    "testMatch": [
-      "<rootDir>/test/**/*.test.tsx",
-      "<rootDir>/test/**/*.test.ts"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest",
-      "\\.js$": "babel-jest"
-    }
+    "projects": [
+      {
+        "displayName": "unit",
+        "testEnvironment": "jsdom",
+        "moduleNameMapper": {
+          "\\.(css|less)$": "<rootDir>/test/__mocks__/styleMock.js"
+        },
+        "testMatch": [
+          "<rootDir>/test/**/*.test.tsx",
+          "<rootDir>/test/**/*.test.ts"
+        ],
+        "testPathIgnorePatterns": ["/node_modules/", "/test/net/"],
+        "transform": {
+          "^.+\\.tsx?$": "ts-jest",
+          "\\.js$": "babel-jest"
+        }
+      },
+      {
+        "displayName": "integration",
+        "testEnvironment": "node",
+        "testMatch": ["<rootDir>/test/net/**/*.test.ts"],
+        "transform": {
+          "^.+\\.tsx?$": "ts-jest",
+          "\\.js$": "babel-jest"
+        }
+      }
+    ]
   }
 }

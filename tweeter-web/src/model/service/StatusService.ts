@@ -1,4 +1,5 @@
-import { AuthToken, Status, FakeData } from "tweeter-shared";
+// AI-assisted: see AI-ATTRIBUTION.md
+import { AuthToken, Status, StatusDto, PagedItemRequest } from "tweeter-shared";
 import { Service } from "./Service";
 
 export class StatusService extends Service {
@@ -18,8 +19,13 @@ export class StatusService extends Service {
     pageSize: number,
     lastItem: Status | null,
   ): Promise<[Status[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+    const req: PagedItemRequest<StatusDto> = {
+      token: authToken.token,
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastItem?.dto ?? null,
+    };
+    return await this.server.loadMoreFeedItems(req);
   }
 
   public async loadMoreStoryItems(
@@ -28,7 +34,12 @@ export class StatusService extends Service {
     pageSize: number,
     lastItem: Status | null,
   ): Promise<[Status[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getPageOfStatuses(lastItem, pageSize);
+    const req: PagedItemRequest<StatusDto> = {
+      token: authToken.token,
+      userAlias: userAlias,
+      pageSize: pageSize,
+      lastItem: lastItem?.dto ?? null,
+    };
+    return await this.server.loadMoreStoryItems(req);
   }
 }

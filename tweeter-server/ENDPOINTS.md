@@ -247,38 +247,46 @@ Response: `{ "success": true, "message": null }`
 
 ### Get Feed
 
+Like Get Followers, this retrieval endpoint uses POST to carry the paged request as a JSON body.
+
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /feed/{alias}
 Body: {
   token: string,
   userAlias: string,
   pageSize: number,
-  lastItem: Status | null
+  lastItem: StatusDto | null
 }
 ```
 
-Handler (to be created): `src/handlers/status/FeedGetHandler.ts`
+`StatusDto` contains `post: string`, `user: UserDto`, and `timestamp: number`.
 
-Response: A paged response with `items: Status[]` and `hasMore: boolean`.
+Handler: [FeedGetHandler](./src/handlers/status/FeedGetHandler.ts)
+
+Response: A paged response with `items: StatusDto[]` and `hasMore: boolean`. The facade converts these DTOs into `Status` objects.
 
 ### Get Story
+
+Like Get Followers, this retrieval endpoint uses POST to carry the paged request as a JSON body.
 
 Request:
 
 ```http
-Method: GET
+Method: POST
 Path: /story/{alias}
 Body: {
   token: string,
   userAlias: string,
   pageSize: number,
-  lastItem: Status | null
+  lastItem: StatusDto | null
 }
 ```
 
-Handler (to be created): `src/handlers/status/StoryGetHandler.ts`
+Handler: [StoryGetHandler](./src/handlers/status/StoryGetHandler.ts)
 
-Response: A paged response with `items: Status[]` and `hasMore: boolean`.
+Response: Same paged `StatusDto` response as Get Feed.
+
+Both endpoints currently use backend `FakeData` pagination, like Get Followers; they do not yet filter statuses by the requested user or follow relationships.
