@@ -1,14 +1,23 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
+import { Service } from "./Service";
+import { IUserDAO } from "../dao/user/IUserDAO";
 
-export class UserService {
+export class UserService extends Service {
+  private userDAO: IUserDAO;
+  public constructor() {
+    super();
+  }
+
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
-    const user = FakeData.instance.findUserByAlias(alias);
-    return user?.dto ?? null;
+    this.authenticate(token);
+    const user = this.userDAO.getUser(alias);
+    return user ?? null;
   }
 
   public async logout(token: string): Promise<void> {
-    // No token store exists yet. Invalidate the token here when persistence is added.
+    this.authenticate(token);
+    this.authDAO.deleteAuth(token);
   }
 
   public async register(
