@@ -1,4 +1,4 @@
-import { AuthTokenDto, UserDto } from "tweeter-shared";
+import { AuthTokenDto, CredentialsDto, UserDto } from "tweeter-shared";
 
 export interface IUserDAO {
   getUser(alias: string): Promise<UserDto | null>;
@@ -7,5 +7,6 @@ export interface IUserDAO {
     lastName: string,
     alias: string,
     password: string,
-  ): Promise<[UserDto, AuthTokenDto]>;
+  ): Promise<UserDto>;
+  getUserWithPassword(alias: string): Promise<CredentialsDto | null>;
 }

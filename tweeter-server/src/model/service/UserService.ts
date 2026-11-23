@@ -2,22 +2,24 @@
 import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IUserDAO } from "../dao/user/IUserDAO";
+import { IUserImageDAO } from "../dao/user/IUserImageDAO";
 
 export class UserService extends Service {
   private userDAO: IUserDAO;
+  private userImageDAO: IUserImageDAO;
   public constructor() {
     super();
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
-    this.authenticate(token);
-    const user = this.userDAO.getUser(alias);
+    await this.authenticate(token);
+    const user = await this.userDAO.getUser(alias);
     return user ?? null;
   }
 
   public async logout(token: string): Promise<void> {
-    this.authenticate(token);
-    this.authDAO.deleteAuth(token);
+    await this.authenticate(token);
+    await this.authDAO.deleteAuth(token);
   }
 
   public async register(
@@ -28,14 +30,24 @@ export class UserService extends Service {
     userImageBytes: string,
     imageFileExtension: string,
   ): Promise<[UserDto, AuthTokenDto]> {
-    // Preserve the existing FakeData registration behavior until storage is implemented.
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("bad-request: Invalid registration");
+    if ((await this.userDAO.getUser(alias)) != null) {
+      throw new Error("bad-request: Alias already taken");
     }
 
-    return [user.dto, AuthToken.Generate().dto];
+    const user = await this.userDAO.createUser(
+      firstName,
+      lastName,
+      alias,
+      password,
+    );
+    await this.userImageDAO.putUserImage(
+      alias,
+      userImageBytes,
+      imageFileExtension,
+    );
+    const auth = await this.authDAO.createAuth(alias);
+
+    return [user, auth];
   }
 
   public async login(
@@ -43,12 +55,19 @@ export class UserService extends Service {
     password: string,
   ): Promise<[UserDto, AuthTokenDto]> {
     // Preserve the existing FakeData login behavior until authentication is implemented.
-    const user = FakeData.instance.firstUser;
+    const credentials = await this.userDAO.getUserWithPassword(alias);
 
-    if (user === null) {
+    if (credentials === null || credentials.password != password) {
       throw new Error("unauthorized: Invalid alias or password");
     }
 
-    return [user.dto, AuthToken.Generate().dto];
+    const user = {
+      firstName: credentials.firstName,
+      lastName: credentials.lastName,
+      alias: credentials.alias,
+      imageUrl: credentials.imageUrl,
+    };
+
+    return [user, AuthToken.Generate().dto];
   }
 }
