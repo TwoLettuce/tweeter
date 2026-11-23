@@ -333,3 +333,218 @@ Handler: [GetStoryHandler](./src/handlers/status/GetStoryHandler.ts)
 Response: Same paged `StatusDto` response as Get Feed.
 
 Both endpoints currently use backend `FakeData` pagination, like Get Followers; they do not yet filter statuses by the requested user or follow relationships.
+
+## API Gateway Method Descriptions
+
+The following descriptions can be used for the corresponding API Gateway methods. `pathParameters` documents values captured from each route; an empty object means the route has no path parameters.
+
+### Login (`POST /login`)
+
+```json
+{
+  "description": "Authenticate a user and return the user and authorization token.",
+  "pathParameters": {},
+  "requestBody": {
+    "alias": "string. Alias of the user attempting to log in.",
+    "password": "string. Password of the user attempting to log in."
+  }
+}
+```
+
+### Register (`POST /register`)
+
+```json
+{
+  "description": "Register a user and return the user and authorization token.",
+  "pathParameters": {},
+  "requestBody": {
+    "firstName": "string. User's first name.",
+    "lastName": "string. User's last name.",
+    "alias": "string. User's unique alias.",
+    "password": "string. User's password.",
+    "userImageBytes": "string. User image bytes encoded as base64.",
+    "imageFileExtension": "string. File extension of the user image."
+  }
+}
+```
+
+### Logout (`POST /logout`)
+
+```json
+{
+  "description": "Log out the user associated with the authorization token.",
+  "pathParameters": {},
+  "requestBody": {
+    "token": "string. Authorization token."
+  }
+}
+```
+
+### Get User (`POST /user/{alias}`)
+
+```json
+{
+  "description": "Retrieve the user with the given alias.",
+  "pathParameters": {
+    "alias": "Alias of the user to retrieve."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "alias": "string. Alias of the user to retrieve."
+  }
+}
+```
+
+### Get Followees (`POST /followees/{alias}`)
+
+```json
+{
+  "description": "Retrieve a page of users followed by the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose followees should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userAlias": "string. Alias of the user whose followees should be fetched.",
+    "pageSize": "number. Number of followees to fetch at a time.",
+    "lastItem": "UserDto object or null. The last followee from the previous request page."
+  }
+}
+```
+
+### Get Followers (`POST /followers/{alias}`)
+
+```json
+{
+  "description": "Retrieve a page of users who follow the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose followers should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userAlias": "string. Alias of the user whose followers should be fetched.",
+    "pageSize": "number. Number of followers to fetch at a time.",
+    "lastItem": "UserDto object or null. The last follower from the previous request page."
+  }
+}
+```
+
+### Get Is Follower Status (`POST /isfollower/{alias}/{selectedAlias}`)
+
+```json
+{
+  "description": "Determine whether the selected user follows the requesting user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose follower status is being checked.",
+    "selectedAlias": "Alias of the selected user to check as a follower."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "alias": "string. Alias of the user whose follower status is being checked.",
+    "selectedAlias": "string. Alias of the selected user to check as a follower."
+  }
+}
+```
+
+### Get Followee Count (`POST /followeecount/{alias}`)
+
+```json
+{
+  "description": "Retrieve the number of users followed by the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose followee count should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "alias": "string. Alias of the user whose followee count should be fetched."
+  }
+}
+```
+
+### Get Follower Count (`POST /followercount/{alias}`)
+
+```json
+{
+  "description": "Retrieve the number of users who follow the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose follower count should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "alias": "string. Alias of the user whose follower count should be fetched."
+  }
+}
+```
+
+### Follow (`POST /follow`)
+
+```json
+{
+  "description": "Follow the specified user.",
+  "pathParameters": {},
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userToFollow": "UserDto object. User to follow."
+  }
+}
+```
+
+### Unfollow (`POST /unfollow`)
+
+```json
+{
+  "description": "Stop following the specified user.",
+  "pathParameters": {},
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userToUnfollow": "UserDto object. User to unfollow."
+  }
+}
+```
+
+### Post Status (`POST /status`)
+
+```json
+{
+  "description": "Publish a new status.",
+  "pathParameters": {},
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "newStatus": "StatusDto object containing the post text, author UserDto, and timestamp."
+  }
+}
+```
+
+### Get Feed (`POST /feed/{alias}`)
+
+```json
+{
+  "description": "Retrieve a page of feed statuses for the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose feed should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userAlias": "string. Alias of the user whose feed should be fetched.",
+    "pageSize": "number. Number of feed items to fetch at a time.",
+    "lastItem": "StatusDto object or null. The last item of the previous request page."
+  }
+}
+```
+
+### Get Story (`POST /story/{alias}`)
+
+```json
+{
+  "description": "Retrieve a page of statuses posted by the given user.",
+  "pathParameters": {
+    "alias": "Alias of the user whose story should be fetched."
+  },
+  "requestBody": {
+    "token": "string. Authorization token.",
+    "userAlias": "string. Alias of the user whose story should be fetched.",
+    "pageSize": "number. Number of story items to fetch at a time.",
+    "lastItem": "StatusDto object or null. The last item of the previous request page."
+  }
+}
+```

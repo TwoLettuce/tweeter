@@ -141,3 +141,9 @@
 - Tool: Codex
 - Task: Fix missing Jest globals in IDE test files by adding a test-directory TypeScript configuration that extends the web configuration and includes Jest and Node types.
 - Review: IDE errors remedied
+
+## 2026-11-17: tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Add API Gateway-style descriptions for each endpoint defined in ENDPOINTS.md, documenting its path parameters and request body fields.
+- Review: All good!
