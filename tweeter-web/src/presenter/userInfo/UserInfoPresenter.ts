@@ -1,3 +1,4 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { AuthToken, User } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
 import { NavigateFunction } from "react-router-dom";
@@ -5,7 +6,7 @@ import { MessageView, Presenter } from "../Presenter";
 
 export interface UserInfoView extends MessageView {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsFollower: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsFollower: (userAlias: string, isFollower: boolean) => void;
   setFolloweeCount: React.Dispatch<React.SetStateAction<number>>;
   setFollowerCount: React.Dispatch<React.SetStateAction<number>>;
   setDisplayedUser: (user: User) => void;
@@ -36,9 +37,10 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
   ) {
     await this.doFailureReportingOperation(async () => {
       if (currentUser === displayedUser) {
-        this.view.setIsFollower(false);
+        this.view.setIsFollower(displayedUser.alias, false);
       } else {
         this.view.setIsFollower(
+          displayedUser.alias,
           await this.followService.getIsFollowerStatus(
             authToken!,
             currentUser!,
@@ -88,7 +90,7 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
         displayedUser!,
       );
 
-      this.view.setIsFollower(nowFollowing);
+      this.view.setIsFollower(displayedUser.alias, nowFollowing);
       this.view.setFollowerCount(followerCount);
       this.view.setFolloweeCount(followeeCount);
     }, `${description} user`);

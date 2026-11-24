@@ -1,3 +1,4 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import "./UserInfoComponent.css";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -11,7 +12,10 @@ import {
 import React from "react";
 
 const UserInfo = () => {
-  const [isFollower, setIsFollower] = useState(false);
+  const [followerStatus, setFollowerStatus] = useState<{
+    userAlias: string;
+    isFollower: boolean;
+  } | null>(null);
   const [followeeCount, setFolloweeCount] = useState(-1);
   const [followerCount, setFollowerCount] = useState(-1);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,12 +26,16 @@ const UserInfo = () => {
   const { setDisplayedUser } = useUserInfoActions();
   const navigate = useNavigate();
   const location = useLocation();
+  const isFollowerStatusLoaded =
+    displayedUser !== null && followerStatus?.userAlias === displayedUser.alias;
+  const isFollower = isFollowerStatusLoaded && followerStatus?.isFollower === true;
 
   const presenterRef = useRef<UserInfoPresenter | null>(null);
   if (!presenterRef.current) {
     const listener: UserInfoView = {
       setIsLoading: setIsLoading,
-      setIsFollower: setIsFollower,
+      setIsFollower: (userAlias, isFollower) =>
+        setFollowerStatus({ userAlias, isFollower }),
       setFolloweeCount: setFolloweeCount,
       setFollowerCount: setFollowerCount,
       setDisplayedUser: setDisplayedUser,
@@ -115,7 +123,7 @@ const UserInfo = () => {
                       className="btn btn-md btn-secondary me-1"
                       type="submit"
                       style={{ width: "6em" }}
-                      disabled={isLoading}
+                      disabled={isLoading || !isFollowerStatusLoaded}
                       onClick={unfollow}
                     >
                       {isLoading ? (
@@ -134,7 +142,7 @@ const UserInfo = () => {
                       className="btn btn-md btn-primary me-1"
                       type="submit"
                       style={{ width: "6em" }}
-                      disabled={isLoading}
+                      disabled={isLoading || !isFollowerStatusLoaded}
                       onClick={follow}
                     >
                       {isLoading ? (
