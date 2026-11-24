@@ -1,11 +1,12 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import { PagedItemRequest, PagedItemResponse, StatusDto } from "tweeter-shared";
 import { StatusService } from "../../model/service/StatusService";
+import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
 
 export const getFeedHandler = async (
   request: PagedItemRequest<StatusDto>,
 ): Promise<PagedItemResponse<StatusDto>> => {
-  const statusService = new StatusService();
+  const statusService = new StatusService(new AwsDAOFactory());
   const [items, hasMore] = await statusService.loadMoreFeedItems(
     request.token,
     request.userAlias,

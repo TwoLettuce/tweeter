@@ -1,11 +1,12 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import { UnfollowRequest, FollowResponse } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
+import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
 
 export const unfollowHandler = async (
   request: UnfollowRequest,
 ): Promise<FollowResponse> => {
-  const followService = new FollowService();
+  const followService = new FollowService(new AwsDAOFactory());
   const [followerCount, followeeCount] = await followService.unfollow(
     request.token,
     request.userToUnfollow,
