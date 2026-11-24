@@ -3,12 +3,15 @@ import { UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IFollowDAO } from "../dao/follow/IFollowDAO";
 import { IUserDAO } from "../dao/user/IUserDAO";
+import { IDAOFactory } from "../dao/factory/IDAOFactory";
 
 export class FollowService extends Service {
   private followDAO: IFollowDAO;
   private userDAO: IUserDAO;
-  public constructor() {
+  public constructor(factory: IDAOFactory) {
     super();
+    this.followDAO = factory.getFollowDAO();
+    this.userDAO = factory.getUserDAO();
   }
 
   public async loadMoreFollowees(

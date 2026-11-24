@@ -1,7 +1,11 @@
 import { IAuthDAO } from "../dao/auth/IAuthDAO";
+import { IDAOFactory } from "../dao/factory/IDAOFactory";
 
 export abstract class Service {
   private _authDAO: IAuthDAO;
+  protected constructor(factory: IDAOFactory) {
+    this._authDAO = factory.getAuthDAO();
+  }
 
   protected get authDAO(): IAuthDAO {
     return this._authDAO;

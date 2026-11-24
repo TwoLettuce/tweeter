@@ -3,12 +3,16 @@ import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IUserDAO } from "../dao/user/IUserDAO";
 import { IUserImageDAO } from "../dao/user/IUserImageDAO";
+import { IDAOFactory } from "../dao/factory/IDAOFactory";
 
 export class UserService extends Service {
   private userDAO: IUserDAO;
   private userImageDAO: IUserImageDAO;
-  public constructor() {
-    super();
+
+  public constructor(factory: IDAOFactory) {
+    super(factory);
+    this.userDAO = factory.getUserDAO();
+    this.userImageDAO = factory.getUserImageDAO();
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {

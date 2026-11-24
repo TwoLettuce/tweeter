@@ -2,11 +2,13 @@
 import { StatusDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IStatusDAO } from "../dao/status/IStatusDAO";
+import { IDAOFactory } from "../dao/factory/IDAOFactory";
 
 export class StatusService extends Service {
   private statusDAO: IStatusDAO;
-  public constructor() {
-    super();
+  public constructor(factory: IDAOFactory) {
+    super(factory);
+    this.statusDAO = factory.getStatusDAO();
   }
   public async postStatus(token: string, newStatus: StatusDto): Promise<void> {
     await this.authenticate(token);
