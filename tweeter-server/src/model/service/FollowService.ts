@@ -9,7 +9,7 @@ export class FollowService extends Service {
   private followDAO: IFollowDAO;
   private userDAO: IUserDAO;
   public constructor(factory: IDAOFactory) {
-    super();
+    super(factory);
     this.followDAO = factory.getFollowDAO();
     this.userDAO = factory.getUserDAO();
   }
@@ -49,20 +49,19 @@ export class FollowService extends Service {
       throw new Error("bad-request: selected alias does not exist");
     }
 
-    const followers = (await this.followDAO.getFollowers(alias, 0, null))[0];
-    return followers.includes(selectedUser);
+    return await this.followDAO.isFollower(selectedAlias, alias);
   }
 
   public async getFolloweeCount(token: string, alias: string): Promise<number> {
     await this.authenticate(token);
 
-    return (await this.followDAO.getFollowees(alias, 0, null))[0].length;
+    return await this.followDAO.getFolloweeCount(alias);
   }
 
   public async getFollowerCount(token: string, alias: string): Promise<number> {
     await this.authenticate(token);
 
-    return (await this.followDAO.getFollowers(alias, 0, null))[0].length;
+    return await this.followDAO.getFollowerCount(alias);
   }
 
   public async follow(
@@ -71,18 +70,7 @@ export class FollowService extends Service {
   ): Promise<[followerCount: number, followeeCount: number]> {
     const authData = await this.authenticate(token);
     const follower = await this.userDAO.getUser(authData.alias);
-    await this.followDAO.follow(follower!, userToFollow);
-
-    const followerCount = await this.getFollowerCount(
-      token,
-      userToFollow.alias,
-    );
-    const followeeCount = await this.getFolloweeCount(
-      token,
-      userToFollow.alias,
-    );
-
-    return [followerCount, followeeCount];
+    return await this.followDAO.follow(follower!, userToFollow);
   }
 
   public async unfollow(
@@ -91,17 +79,6 @@ export class FollowService extends Service {
   ): Promise<[followerCount: number, followeeCount: number]> {
     const authData = await this.authenticate(token);
     const follower = await this.userDAO.getUser(authData.alias);
-    await this.followDAO.unfollow(follower!, userToUnfollow);
-
-    const followerCount = await this.getFollowerCount(
-      token,
-      userToUnfollow.alias,
-    );
-    const followeeCount = await this.getFolloweeCount(
-      token,
-      userToUnfollow.alias,
-    );
-
-    return [followerCount, followeeCount];
+    return await this.followDAO.unfollow(follower!, userToUnfollow);
   }
 }

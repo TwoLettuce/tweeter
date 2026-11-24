@@ -153,3 +153,21 @@
 - Tool: Codex
 - Task: Add a DTO getter and `fromDto` method to `AuthData`. Define the `AuthDataDto` shape and use it in the auth DAO contract.
 - Review: a little funky to put the DTO interface and the class in the same file but it's all good. After further review and implementation it looks like the DTO/interface is all I really need.
+
+## 2026-11-24: tweeter-server/src/model/dao/DATABASE.md (new file), AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Document a DynamoDB and S3 data design based on the existing DAO interfaces, including precomputed feeds, follow lookup in both directions, pagination, counts, credentials, and profile images.
+- Review: it didn't create the design, but I gave it my thoughts and it helped fine-tune that design.
+
+## 2026-11-24: tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Update the database design to specify that auth tokens expire after five minutes of inactivity, with activity-based expiry refresh and DynamoDB TTL cleanup.
+- Review: It asked me some questions about my design, so I indicated that it could go ahead and fix the issues it found
+
+## 2026-11-24: tweeter-server/src/model/dao/follow/IFollowDAO.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Replace zero-page relationship counting with direct counter lookups, define transactional follow counter updates, and use an alias-based relationship lookup for follower status.
+- Review: I approve of the changes
