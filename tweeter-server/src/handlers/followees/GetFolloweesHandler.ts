@@ -2,8 +2,9 @@
 import { PagedItemRequest, PagedItemResponse, UserDto } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const getFolloweesHandler = async (
+export const getFolloweesHandler = withApiErrorHandling(async (
   request: PagedItemRequest<UserDto>,
 ): Promise<PagedItemResponse<UserDto>> => {
   const followService = new FollowService(new AwsDAOFactory());
@@ -19,4 +20,4 @@ export const getFolloweesHandler = async (
     items: items,
     hasMore: hasMore,
   };
-};
+});

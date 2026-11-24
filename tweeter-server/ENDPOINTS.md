@@ -1,6 +1,16 @@
 ## Endpoints
 
-All endpoint responses include `success: boolean` and `message: string | null`. Error responses use the same error format configured in `template.yaml`.
+Successful endpoint responses include `success: true` and a `message` field. Errors return a non-2xx status and the shared response shape below. Error messages are safe for display; implementation details stay in server logs.
+
+```json
+{
+  "success": false,
+  "code": "ALIAS_TAKEN",
+  "message": "That alias is already in use."
+}
+```
+
+Current error codes are `INVALID_CREDENTIALS` (401), `SESSION_EXPIRED` (401), `INVALID_INPUT` (400), `NOT_FOUND` (404), `ALIAS_TAKEN` (409), `RELATIONSHIP_CONFLICT` (409), and `INTERNAL_ERROR` (500). Unexpected server failures use the generic `INTERNAL_ERROR` message.
 
 ### Login
 

@@ -2,8 +2,9 @@
 import { PagedItemRequest, PagedItemResponse, StatusDto } from "tweeter-shared";
 import { StatusService } from "../../model/service/StatusService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const getStoryHandler = async (
+export const getStoryHandler = withApiErrorHandling(async (
   request: PagedItemRequest<StatusDto>,
 ): Promise<PagedItemResponse<StatusDto>> => {
   const statusService = new StatusService(new AwsDAOFactory());
@@ -19,4 +20,4 @@ export const getStoryHandler = async (
     items: items,
     hasMore: hasMore,
   };
-};
+});

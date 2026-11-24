@@ -2,8 +2,9 @@
 import { PostStatusRequest, TweeterResponse } from "tweeter-shared";
 import { StatusService } from "../../model/service/StatusService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const postStatusHandler = async (
+export const postStatusHandler = withApiErrorHandling(async (
   request: PostStatusRequest,
 ): Promise<TweeterResponse> => {
   const statusService = new StatusService(new AwsDAOFactory());
@@ -12,4 +13,4 @@ export const postStatusHandler = async (
     success: true,
     message: null,
   };
-};
+});

@@ -2,8 +2,9 @@
 import { FollowRequest, FollowResponse } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const followHandler = async (
+export const followHandler = withApiErrorHandling(async (
   request: FollowRequest,
 ): Promise<FollowResponse> => {
   const followService = new FollowService(new AwsDAOFactory());
@@ -17,4 +18,4 @@ export const followHandler = async (
     followerCount: followerCount,
     followeeCount: followeeCount,
   };
-};
+});

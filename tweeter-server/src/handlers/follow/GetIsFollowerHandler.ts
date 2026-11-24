@@ -2,8 +2,9 @@
 import { IsFollowerRequest, IsFollowerResponse } from "tweeter-shared";
 import { FollowService } from "../../model/service/FollowService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const getIsFollowerHandler = async (
+export const getIsFollowerHandler = withApiErrorHandling(async (
   request: IsFollowerRequest,
 ): Promise<IsFollowerResponse> => {
   const followService = new FollowService(new AwsDAOFactory());
@@ -17,4 +18,4 @@ export const getIsFollowerHandler = async (
     message: null,
     isFollower: isFollower,
   };
-};
+});

@@ -2,8 +2,9 @@
 import { LogoutRequest, TweeterResponse } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const logoutHandler = async (
+export const logoutHandler = withApiErrorHandling(async (
   request: LogoutRequest,
 ): Promise<TweeterResponse> => {
   const userService = new UserService(new AwsDAOFactory());
@@ -12,4 +13,4 @@ export const logoutHandler = async (
     success: true,
     message: null,
   };
-};
+});

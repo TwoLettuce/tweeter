@@ -2,8 +2,9 @@
 import { RegisterRequest, RegisterResponse } from "tweeter-shared";
 import { UserService } from "../../model/service/UserService";
 import { AwsDAOFactory } from "../../model/dao/factory/AwsDAOFactory";
+import { withApiErrorHandling } from "../withApiErrorHandling";
 
-export const registerHandler = async (
+export const registerHandler = withApiErrorHandling(async (
   request: RegisterRequest,
 ): Promise<RegisterResponse> => {
   const userService = new UserService(new AwsDAOFactory());
@@ -21,4 +22,4 @@ export const registerHandler = async (
     user: user,
     authToken: authToken,
   };
-};
+});

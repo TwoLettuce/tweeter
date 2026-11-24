@@ -73,25 +73,58 @@ Resources:
           - application/json
         x-common-request-templates: &commonRequestTemplates
           application/json: $input.json('$')
+        x-common-error-response-template: &commonErrorResponseTemplate |
+          #set($error = $util.parseJson($input.path('$.errorMessage')))
+          {
+            "success": false,
+            "code": "$error.code",
+            "message": "$error.message"
+          }
         x-common-amazon-responses: &commonAmazonResponses
           default:
             statusCode: 200
             responseParameters: *commonCorsHeaders
-          ".*bad-request.*":
+          ".*INVALID_INPUT.*":
             statusCode: 400
             responseParameters: *commonCorsHeaders
             responseTemplates:
-              application/json: '{ "error": "$input.path(''$.errorMessage'')" }'
-          ".*unauthorized.*":
+              application/json: *commonErrorResponseTemplate
+          ".*INVALID_CREDENTIALS.*":
             statusCode: 401
             responseParameters: *commonCorsHeaders
             responseTemplates:
-              application/json: '{ "error": "$input.path(''$.errorMessage'')" }'
-          ".*internal-server-error.*":
+              application/json: *commonErrorResponseTemplate
+          ".*SESSION_EXPIRED.*":
+            statusCode: 401
+            responseParameters: *commonCorsHeaders
+            responseTemplates:
+              application/json: *commonErrorResponseTemplate
+          ".*NOT_FOUND.*":
+            statusCode: 404
+            responseParameters: *commonCorsHeaders
+            responseTemplates:
+              application/json: *commonErrorResponseTemplate
+          ".*ALIAS_TAKEN.*":
+            statusCode: 409
+            responseParameters: *commonCorsHeaders
+            responseTemplates:
+              application/json: *commonErrorResponseTemplate
+          ".*RELATIONSHIP_CONFLICT.*":
+            statusCode: 409
+            responseParameters: *commonCorsHeaders
+            responseTemplates:
+              application/json: *commonErrorResponseTemplate
+          ".*INTERNAL_ERROR.*":
             statusCode: 500
             responseParameters: *commonCorsHeaders
             responseTemplates:
-              application/json: '{ "error": "$input.path(''$.errorMessage'')" }'
+              application/json: *commonErrorResponseTemplate
+          ".*":
+            statusCode: 500
+            responseParameters: *commonCorsHeaders
+            responseTemplates:
+              application/json: >-
+                { "success": false, "code": "INTERNAL_ERROR", "message": "Something went wrong. Please try again." }
         x-common-swagger-responses: &commonSwaggerResponses
           "200":
             description: "OK"
@@ -101,6 +134,12 @@ Resources:
             headers: *commonSwaggerResponseHeaders
           "401":
             description: "Unauthorized"
+            headers: *commonSwaggerResponseHeaders
+          "404":
+            description: "Not Found"
+            headers: *commonSwaggerResponseHeaders
+          "409":
+            description: "Conflict"
             headers: *commonSwaggerResponseHeaders
           "500":
             description: "Internal Server Error"
