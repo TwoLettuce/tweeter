@@ -1,27 +1,25 @@
 // AI-assisted: see AI-ATTRIBUTION.md
-import { FakeData, User, UserDto } from "tweeter-shared";
+import { UserDto } from "tweeter-shared";
+import { Service } from "./Service";
+import { IFollowDAO } from "../dao/follow/IFollowDAO";
+import { IUserDAO } from "../dao/user/IUserDAO";
 
-export class FollowService {
+export class FollowService extends Service {
+  private followDAO: IFollowDAO;
+  private userDAO: IUserDAO;
+  public constructor() {
+    super();
+  }
+
   public async loadMoreFollowees(
     token: string,
     userAlias: string,
     pageSize: number,
     lastFollowee: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
-    return this.getFakeData(lastFollowee, pageSize, userAlias);
-  }
+    await this.authenticate(token);
 
-  private async getFakeData(
-    lastItem: UserDto | null,
-    pageSize: number,
-    userAlias: string,
-  ): Promise<[UserDto[], boolean]> {
-    const [users, hasMore] = FakeData.instance.getPageOfUsers(
-      lastItem ? User.fromDto(lastItem) : null,
-      pageSize,
-      userAlias,
-    );
-    return [users.map((user) => user.dto), hasMore];
+    return await this.followDAO.getFollowees(userAlias, pageSize, lastFollowee);
   }
 
   public async loadMoreFollowers(
@@ -31,7 +29,9 @@ export class FollowService {
     lastFollower: UserDto | null,
   ): Promise<[UserDto[], boolean]> {
     // TODO: Replace with the result of calling server
-    return this.getFakeData(lastFollower, pageSize, userAlias);
+    await this.authenticate(token);
+
+    return await this.followDAO.getFollowers(userAlias, pageSize, lastFollower);
   }
 
   public async getIsFollowerStatus(
@@ -39,31 +39,36 @@ export class FollowService {
     alias: string,
     selectedAlias: string,
   ): Promise<boolean> {
-    // Replace FakeData with a lookup of the relationship between these aliases.
-    return FakeData.instance.isFollower();
+    await this.authenticate(token);
+
+    const selectedUser = await this.userDAO.getUser(selectedAlias);
+    if (selectedUser == null) {
+      throw new Error("bad-request: selected alias does not exist");
+    }
+
+    const followers = (await this.followDAO.getFollowers(alias, 0, null))[0];
+    return followers.includes(selectedUser);
   }
 
-  public async getFolloweeCount(
-    token: string,
-    alias: string,
-  ): Promise<number> {
-    // Replace FakeData with a stored followee count when persistence is added.
-    return FakeData.instance.getFolloweeCount(alias);
+  public async getFolloweeCount(token: string, alias: string): Promise<number> {
+    await this.authenticate(token);
+
+    return (await this.followDAO.getFollowees(alias, 0, null))[0].length;
   }
 
-  public async getFollowerCount(
-    token: string,
-    alias: string,
-  ): Promise<number> {
-    // Replace FakeData with a stored follower count when persistence is added.
-    return FakeData.instance.getFollowerCount(alias);
+  public async getFollowerCount(token: string, alias: string): Promise<number> {
+    await this.authenticate(token);
+
+    return (await this.followDAO.getFollowers(alias, 0, null))[0].length;
   }
 
   public async follow(
     token: string,
     userToFollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Persist the follow relationship here when storage is implemented.
+    const authData = await this.authenticate(token);
+    const follower = await this.userDAO.getUser(authData.alias);
+    await this.followDAO.follow(follower!, userToFollow);
 
     const followerCount = await this.getFollowerCount(
       token,
@@ -81,7 +86,9 @@ export class FollowService {
     token: string,
     userToUnfollow: UserDto,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Remove the follow relationship here when storage is implemented.
+    const authData = await this.authenticate(token);
+    const follower = await this.userDAO.getUser(authData.alias);
+    await this.followDAO.unfollow(follower!, userToUnfollow);
 
     const followerCount = await this.getFollowerCount(
       token,

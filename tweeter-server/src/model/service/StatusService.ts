@@ -5,7 +5,9 @@ import { IStatusDAO } from "../dao/status/IStatusDAO";
 
 export class StatusService extends Service {
   private statusDAO: IStatusDAO;
-  public constructor() {}
+  public constructor() {
+    super();
+  }
   public async postStatus(token: string, newStatus: StatusDto): Promise<void> {
     await this.authenticate(token);
     await this.statusDAO.postToFeeds(newStatus);

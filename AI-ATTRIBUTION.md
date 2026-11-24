@@ -147,3 +147,9 @@
 - Tool: Codex
 - Task: Add API Gateway-style descriptions for each endpoint defined in ENDPOINTS.md, documenting its path parameters and request body fields.
 - Review: All good!
+
+## 2026-11-23: tweeter-server/src/model/domain/AuthData.ts, tweeter-server/src/model/dao/auth/IAuthDAO.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Add a DTO getter and `fromDto` method to `AuthData`. Define the `AuthDataDto` shape and use it in the auth DAO contract.
+- Review: a little funky to put the DTO interface and the class in the same file but it's all good. After further review and implementation it looks like the DTO/interface is all I really need.

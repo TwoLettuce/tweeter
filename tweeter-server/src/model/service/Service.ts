@@ -12,6 +12,7 @@ export abstract class Service {
     if (authData == null) {
       throw new Error("unauthorized: Not logged in");
     } else {
+      return authData;
     }
   }
 }
