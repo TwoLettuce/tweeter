@@ -72,7 +72,8 @@ export class DynamoAuthDAO extends DynamoDAO implements IAuthDAO {
           lastActivityAt: now,
           expiresAt: Math.ceil((now + INACTIVITY_TIMEOUT_MS) / 1000),
         },
-        ConditionExpression: "attribute_not_exists(token)",
+        ConditionExpression: "attribute_not_exists(#token)",
+        ExpressionAttributeNames: { "#token": "token" },
       }),
     );
     return generated;

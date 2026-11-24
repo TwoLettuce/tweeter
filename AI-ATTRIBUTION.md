@@ -189,3 +189,9 @@
 - Tool: Codex
 - Task: Set every active DynamoDB table in the SAM template to provisioned billing with one read capacity unit and one write capacity unit, including the follow GSI.
 - Review: Looks good! Changed all tables.
+
+## 2026-11-24: tweeter-server/src/model/dao/auth/DynamoAuthDAO.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Fix the DynamoDB auth-token conditional put expression by aliasing the reserved `token` attribute name.
+- Review: TODO
