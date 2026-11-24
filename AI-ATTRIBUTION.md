@@ -177,3 +177,9 @@
 - Tool: Codex
 - Task: Implement DynamoDB DAOs and the S3 user-image DAO using DATABASE.md, share common AWS access and pagination helpers, wire the DAOs into Lambda handlers, and provision the matching DynamoDB tables and private image bucket.
 - Review: Codex did a LOT more than I asked it to, I only wanted it to write the DAOs to match the interfaces but it went all the way and tried to finish the rest of the phase. My prompt was "Create Dynamo DB implementations (naming them DynamoAuthDAO, DynamoUserDAO, etc. (plus s3UserImageDAO)). Use the definitions in DATABASE.md and avoid code duplication." I will review and commit small groups of code as I verify them.
+
+## 2026-11-24: tweeter-server/package.json, tweeter-server/package-lock.json, tweeter-server/src/model/dao/user/IPasswordEncryptor.ts (new file), tweeter-server/src/model/dao/user/BcryptPasswordEncryptor.ts (new file), tweeter-server/src/model/dao/user/PasswordHash.ts (deleted), tweeter-server/src/model/dao/user/DynamoUserDAO.ts, tweeter-server/src/model/dao/factory/IDAOFactory.ts, tweeter-server/src/model/dao/factory/AwsDAOFactory.ts, tweeter-server/src/model/service/UserService.ts, tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Replace scrypt password hashing with bcrypt, define a password-encryptor interface, and adapt the bcrypt library to that interface for registration and login.
+- Review: TODO

@@ -4,16 +4,18 @@ import { Service } from "./Service";
 import { IUserDAO } from "../dao/user/IUserDAO";
 import { IUserImageDAO } from "../dao/user/IUserImageDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
-import { verifyPassword } from "../dao/user/PasswordHash";
+import { IPasswordEncryptor } from "../dao/user/IPasswordEncryptor";
 
 export class UserService extends Service {
   private userDAO: IUserDAO;
   private userImageDAO: IUserImageDAO;
+  private passwordEncryptor: IPasswordEncryptor;
 
   public constructor(factory: IDAOFactory) {
     super(factory);
     this.userDAO = factory.getUserDAO();
     this.userImageDAO = factory.getUserImageDAO();
+    this.passwordEncryptor = factory.getPasswordEncryptor();
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
@@ -63,7 +65,7 @@ export class UserService extends Service {
 
     if (
       credentials === null ||
-      !(await verifyPassword(password, credentials.password))
+      !(await this.passwordEncryptor.verify(password, credentials.password))
     ) {
       throw new Error("unauthorized: Invalid alias or password");
     }

@@ -30,7 +30,7 @@ The `Follows` base key order supports followee listing. Its `ByFollowee` global 
 
 `getUserWithPassword` can read the credential record and return the hash for password verification. Do not store a plaintext `password` attribute.
 
-`DynamoUserDAO` stores passwords as salted scrypt hashes, and `UserService.login` verifies the supplied password before creating a persisted auth token. Creating a user and its zeroed follow-counter item uses one DynamoDB transaction so follow operations always have counter rows to update.
+`DynamoUserDAO` stores passwords as bcrypt hashes through the password-encryptor interface, and `UserService.login` verifies the supplied password before creating a persisted auth token. Creating a user and its zeroed follow-counter item uses one DynamoDB transaction so follow operations always have counter rows to update.
 
 ### `Auth`
 

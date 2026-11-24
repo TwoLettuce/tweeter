@@ -10,13 +10,18 @@ import { DynamoFollowDAO } from "../follow/DynamoFollowDAO";
 import { DynamoStatusDAO } from "../status/DynamoStatusDAO";
 import { DynamoUserDAO } from "../user/DynamoUserDAO";
 import { S3UserImageDAO } from "../s3/S3UserImageDAO";
+import { IPasswordEncryptor } from "../user/IPasswordEncryptor";
+import { BcryptPasswordEncryptor } from "../user/BcryptPasswordEncryptor";
 
 export class AwsDAOFactory implements IDAOFactory {
-  private readonly userDAO: IUserDAO = new DynamoUserDAO();
+  private readonly passwordEncryptor: IPasswordEncryptor = new BcryptPasswordEncryptor();
+  private readonly userDAO: IUserDAO = new DynamoUserDAO(this.passwordEncryptor);
   private readonly authDAO: IAuthDAO = new DynamoAuthDAO();
   private readonly followDAO: IFollowDAO = new DynamoFollowDAO();
   private readonly statusDAO: IStatusDAO = new DynamoStatusDAO();
   private readonly userImageDAO: IUserImageDAO = new S3UserImageDAO();
+
+  getPasswordEncryptor(): IPasswordEncryptor { return this.passwordEncryptor; }
 
   getUserDAO(): IUserDAO { return this.userDAO; }
   getAuthDAO(): IAuthDAO { return this.authDAO; }

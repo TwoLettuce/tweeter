@@ -2,7 +2,7 @@
 import { CredentialsDto, UserDto } from "tweeter-shared";
 import { TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { IUserDAO } from "./IUserDAO";
-import { hashPassword } from "./PasswordHash";
+import { IPasswordEncryptor } from "./IPasswordEncryptor";
 import { DynamoDAO, dynamoClient, tables } from "../dynamo/DynamoDAO";
 import { userImageUrl } from "../s3/UserImageSupport";
 
@@ -11,6 +11,10 @@ interface UserItem extends UserDto {
 }
 
 export class DynamoUserDAO extends DynamoDAO implements IUserDAO {
+  public constructor(private readonly passwordEncryptor: IPasswordEncryptor) {
+    super();
+  }
+
   public async getUser(alias: string): Promise<UserDto | null> {
     const item = await this.getItem<UserItem>(tables.users, { alias });
     return item ? this.toUserDto(item) : null;
@@ -26,7 +30,7 @@ export class DynamoUserDAO extends DynamoDAO implements IUserDAO {
       firstName,
       lastName,
       alias,
-      passwordHash: await hashPassword(password),
+      passwordHash: await this.passwordEncryptor.hash(password),
       imageUrl: userImageUrl(alias),
     };
     try {
