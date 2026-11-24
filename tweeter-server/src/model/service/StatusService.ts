@@ -1,9 +1,15 @@
 // AI-assisted: see AI-ATTRIBUTION.md
-import { FakeData, Status, StatusDto } from "tweeter-shared";
+import { StatusDto } from "tweeter-shared";
+import { Service } from "./Service";
+import { IStatusDAO } from "../dao/status/IStatusDAO";
 
-export class StatusService {
+export class StatusService extends Service {
+  private statusDAO: IStatusDAO;
+  public constructor() {}
   public async postStatus(token: string, newStatus: StatusDto): Promise<void> {
-    // Store the status and distribute it to followers' feeds when persistence is added.
+    await this.authenticate(token);
+    await this.statusDAO.postToFeeds(newStatus);
+    await this.statusDAO.postToStory(newStatus);
   }
 
   public async loadMoreFeedItems(
@@ -12,7 +18,9 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    return this.getFakeData(lastItem, pageSize);
+    await this.authenticate(token);
+
+    return await this.statusDAO.getFeed(userAlias, pageSize, lastItem);
   }
 
   public async loadMoreStoryItems(
@@ -21,17 +29,8 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDto | null,
   ): Promise<[StatusDto[], boolean]> {
-    return this.getFakeData(lastItem, pageSize);
-  }
+    await this.authenticate(token);
 
-  private getFakeData(
-    lastItem: StatusDto | null,
-    pageSize: number,
-  ): [StatusDto[], boolean] {
-    const [items, hasMore] = FakeData.instance.getPageOfStatuses(
-      lastItem ? Status.fromDto(lastItem) : null,
-      pageSize,
-    );
-    return [items.map((item) => item.dto), hasMore];
+    return await this.statusDAO.getStory(userAlias, pageSize, lastItem);
   }
 }

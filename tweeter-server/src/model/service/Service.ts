@@ -8,8 +8,10 @@ export abstract class Service {
   }
 
   protected async authenticate(token: string) {
-    if ((await this.authDAO.getAuth(token)) != null) {
+    const authData = await this.authDAO.getAuth(token);
+    if (authData == null) {
       throw new Error("unauthorized: Not logged in");
+    } else {
     }
   }
 }
