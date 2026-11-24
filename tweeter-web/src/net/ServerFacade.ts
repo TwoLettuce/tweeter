@@ -103,12 +103,16 @@ export class ServerFacade {
   }
 
   public async login(req: LoginRequest): Promise<[User, AuthToken]> {
-    const res = await this.post<LoginRequest, LoginResponse>(
-      req,
-      "/login",
-      "Failed to log in",
-    );
-    return this.getAuthenticatedUser(res, "Login");
+    try {
+      const res = await this.post<LoginRequest, LoginResponse>(
+        req,
+        "/login",
+        "Failed to log in",
+      );
+      return this.getAuthenticatedUser(res, "Login");
+    } catch (e) {
+      throw new Error("Incorrect alias or password!");
+    }
   }
 
   public async register(req: RegisterRequest): Promise<[User, AuthToken]> {
@@ -188,7 +192,9 @@ export class ServerFacade {
     operation: "Login" | "Register",
   ): [User, AuthToken] {
     if (res.user == null || res.authToken == null) {
-      throw new Error(`${operation} response is missing the user or auth token`);
+      throw new Error(
+        `${operation} response is missing the user or auth token`,
+      );
     }
     return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
   }

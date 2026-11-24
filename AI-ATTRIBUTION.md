@@ -206,4 +206,4 @@
 
 - Tool: Codex
 - Task: Keep the follow/unfollow button disabled until the viewed user's follower status has arrived. Associate the result with the viewed alias so a response for another profile cannot enable the button.
-- Review: TODO
+- Review: tested and verified
