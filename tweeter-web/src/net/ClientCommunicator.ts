@@ -66,6 +66,8 @@ export class ClientCommunicator {
         // Be careful with the return type here. resp.json() returns Promise<any> which means there is no type checking on response.
         const response: RES = await resp.json();
         return response;
+      } else if (resp.status == 401) {
+        throw new Error("Not logged in!");
       } else {
         const error = await resp.json();
         throw new Error(error.errorMessage);

@@ -194,4 +194,16 @@
 
 - Tool: Codex
 - Task: Fix the DynamoDB auth-token conditional put expression by aliasing the reserved `token` attribute name.
+- Review: Tested, now works good.
+
+## 2026-11-24: tweeter-shared/src/model/net/request/IsFollowerRequest.ts, tweeter-web/src/model/service/FollowService.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-server/src/handlers/follow/GetIsFollowerHandler.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Rename the is-follower request aliases to `followerAlias` and `followeeAlias` throughout the client and server. Correct the backend lookup to pass those values to the DAO in follower-then-followee order and update endpoint documentation.
+- Review: Tested and now works!
+
+## 2026-11-24: tweeter-web/src/presenter/userInfo/UserInfoPresenter.ts, tweeter-web/src/components/userInfo/UserInfoComponent.tsx, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Keep the follow/unfollow button disabled until the viewed user's follower status has arrived. Associate the result with the viewed alias so a response for another profile cannot enable the button.
 - Review: TODO

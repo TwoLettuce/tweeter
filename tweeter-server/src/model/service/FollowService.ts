@@ -39,17 +39,17 @@ export class FollowService extends Service {
 
   public async getIsFollowerStatus(
     token: string,
-    alias: string,
-    selectedAlias: string,
+    followerAlias: string,
+    followeeAlias: string,
   ): Promise<boolean> {
     await this.authenticate(token);
 
-    const selectedUser = await this.userDAO.getUser(selectedAlias);
-    if (selectedUser == null) {
-      throw new Error("bad-request: selected alias does not exist");
+    const followee = await this.userDAO.getUser(followeeAlias);
+    if (followee == null) {
+      throw new Error("bad-request: followee alias does not exist");
     }
 
-    return await this.followDAO.isFollower(selectedAlias, alias);
+    return await this.followDAO.isFollower(followerAlias, followeeAlias);
   }
 
   public async getFolloweeCount(token: string, alias: string): Promise<number> {

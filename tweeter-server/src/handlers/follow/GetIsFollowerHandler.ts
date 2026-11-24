@@ -9,8 +9,8 @@ export const getIsFollowerHandler = async (
   const followService = new FollowService(new AwsDAOFactory());
   const isFollower = await followService.getIsFollowerStatus(
     request.token,
-    request.alias,
-    request.selectedAlias,
+    request.followerAlias,
+    request.followeeAlias,
   );
   return {
     success: true,

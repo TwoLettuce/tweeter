@@ -44,13 +44,13 @@ export class FollowService extends Service {
 
   public async getIsFollowerStatus(
     authToken: AuthToken,
-    user: User,
-    selectedUser: User,
+    follower: User,
+    followee: User,
   ): Promise<boolean> {
     const req: IsFollowerRequest = {
       token: authToken.token,
-      alias: user.alias,
-      selectedAlias: selectedUser.alias,
+      followerAlias: follower.alias,
+      followeeAlias: followee.alias,
     };
     return await this.server.getIsFollowerStatus(req);
   }

@@ -87,7 +87,7 @@ export class ServerFacade {
   public async getIsFollowerStatus(req: IsFollowerRequest): Promise<boolean> {
     const res = await this.post<IsFollowerRequest, IsFollowerResponse>(
       req,
-      `/isfollower/${encodeURIComponent(req.alias)}/${encodeURIComponent(req.selectedAlias)}`,
+      `/isfollower/${encodeURIComponent(req.followerAlias)}/${encodeURIComponent(req.followeeAlias)}`,
       "Failed to get follower status",
     );
     return res.isFollower;

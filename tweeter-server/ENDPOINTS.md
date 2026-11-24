@@ -165,17 +165,17 @@ Request:
 
 ```http
 Method: POST
-Path: /isfollower/{alias}/{selectedAlias}
+Path: /isfollower/{followerAlias}/{followeeAlias}
 Body: {
   token: string,
-  alias: string,
-  selectedAlias: string
+  followerAlias: string,
+  followeeAlias: string
 }
 ```
 
 Handler: [GetIsFollowerHandler](./src/handlers/follow/GetIsFollowerHandler.ts)
 
-The frontend service builds `IsFollowerRequest` using the current user's alias and the selected user's alias, which the facade also includes in the URL. The backend currently returns `FakeData.instance.isFollower()`, a random boolean; relationship lookup and token validation are not implemented yet.
+The frontend service builds `IsFollowerRequest` with the follower's alias and the followee's alias, which the facade also includes in the URL. The backend checks that relationship in the follow DAO.
 
 Response:
 
@@ -429,19 +429,19 @@ The following descriptions can be used for the corresponding API Gateway methods
 }
 ```
 
-### Get Is Follower Status (`POST /isfollower/{alias}/{selectedAlias}`)
+### Get Is Follower Status (`POST /isfollower/{followerAlias}/{followeeAlias}`)
 
 ```json
 {
-  "description": "Determine whether the selected user follows the requesting user.",
+  "description": "Determine whether the follower follows the followee.",
   "pathParameters": {
-    "alias": "Alias of the user whose follower status is being checked.",
-    "selectedAlias": "Alias of the selected user to check as a follower."
+    "followerAlias": "Alias of the user whose follow relationship is being checked.",
+    "followeeAlias": "Alias of the user being followed."
   },
   "requestBody": {
     "token": "string. Authorization token.",
-    "alias": "string. Alias of the user whose follower status is being checked.",
-    "selectedAlias": "string. Alias of the selected user to check as a follower."
+    "followerAlias": "string. Alias of the user whose follow relationship is being checked.",
+    "followeeAlias": "string. Alias of the user being followed."
   }
 }
 ```

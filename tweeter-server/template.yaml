@@ -162,7 +162,7 @@ Resources:
                 responses: *commonAmazonResponses
               responses: *commonSwaggerResponses
 
-          /isfollower/{alias}/{selectedAlias}:
+          /isfollower/{followerAlias}/{followeeAlias}:
             post:
               consumes: *commonConsumes
               produces: *commonProduces
@@ -375,7 +375,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref tweeterApi
-            Path: /isfollower/{alias}/{selectedAlias}
+            Path: /isfollower/{followerAlias}/{followeeAlias}
             Method: POST
 
   getFolloweeCount:
