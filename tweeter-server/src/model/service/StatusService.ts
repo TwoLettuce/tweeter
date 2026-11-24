@@ -12,8 +12,8 @@ export class StatusService extends Service {
   }
   public async postStatus(token: string, newStatus: StatusDto): Promise<void> {
     await this.authenticate(token);
-    await this.statusDAO.postToFeeds(newStatus);
     await this.statusDAO.postToStory(newStatus);
+    await this.statusDAO.postToFeeds(newStatus);
   }
 
   public async loadMoreFeedItems(

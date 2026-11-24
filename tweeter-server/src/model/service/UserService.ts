@@ -1,9 +1,10 @@
 // AI-assisted: see AI-ATTRIBUTION.md
-import { AuthToken, AuthTokenDto, FakeData, UserDto } from "tweeter-shared";
+import { AuthTokenDto, UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IUserDAO } from "../dao/user/IUserDAO";
 import { IUserImageDAO } from "../dao/user/IUserImageDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
+import { verifyPassword } from "../dao/user/PasswordHash";
 
 export class UserService extends Service {
   private userDAO: IUserDAO;
@@ -58,10 +59,12 @@ export class UserService extends Service {
     alias: string,
     password: string,
   ): Promise<[UserDto, AuthTokenDto]> {
-    // Preserve the existing FakeData login behavior until authentication is implemented.
     const credentials = await this.userDAO.getUserWithPassword(alias);
 
-    if (credentials === null || credentials.password != password) {
+    if (
+      credentials === null ||
+      !(await verifyPassword(password, credentials.password))
+    ) {
       throw new Error("unauthorized: Invalid alias or password");
     }
 
@@ -72,6 +75,6 @@ export class UserService extends Service {
       imageUrl: credentials.imageUrl,
     };
 
-    return [user, AuthToken.Generate().dto];
+    return [user, await this.authDAO.createAuth(alias)];
   }
 }
