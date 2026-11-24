@@ -5,6 +5,7 @@ import { IUserDAO } from "../dao/user/IUserDAO";
 import { IUserImageDAO } from "../dao/user/IUserImageDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
 import { IPasswordEncryptor } from "../dao/user/IPasswordEncryptor";
+import { ApiError } from "../../errors/ApiError";
 
 export class UserService extends Service {
   private userDAO: IUserDAO;
@@ -38,7 +39,7 @@ export class UserService extends Service {
     imageFileExtension: string,
   ): Promise<[UserDto, AuthTokenDto]> {
     if ((await this.userDAO.getUser(alias)) != null) {
-      throw new Error("bad-request: Alias already taken");
+      throw new ApiError("ALIAS_TAKEN");
     }
 
     const user = await this.userDAO.createUser(
@@ -67,7 +68,7 @@ export class UserService extends Service {
       credentials === null ||
       !(await this.passwordEncryptor.verify(password, credentials.password))
     ) {
-      throw new Error("unauthorized: Invalid alias or password");
+      throw new ApiError("INVALID_CREDENTIALS");
     }
 
     const user = {

@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { StatusDto } from "tweeter-shared";
 import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { IStatusDAO } from "./IStatusDAO";
+import { ApiError } from "../../../errors/ApiError";
 import {
   DynamoDAO,
   dynamoClient,
@@ -29,9 +30,7 @@ function statusId(status: StatusDto): string {
 
 function statusKey(status: StatusDto, id = statusId(status)): string {
   if (!Number.isSafeInteger(status.timestamp) || status.timestamp < 0) {
-    throw new Error(
-      "bad-request: Status timestamp must be a non-negative integer",
-    );
+    throw new ApiError("INVALID_INPUT");
   }
   return `${String(status.timestamp).padStart(16, "0")}#${id}`;
 }

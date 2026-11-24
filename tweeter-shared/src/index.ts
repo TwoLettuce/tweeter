@@ -30,4 +30,10 @@ export type { CredentialsDto } from "./model/dto/CredentialsDto";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
+export {
+  API_ERROR_MESSAGES,
+  type ApiErrorCode,
+  type ApiErrorResponse,
+  type ServerApiErrorCode,
+} from "./model/net/response/ApiErrorResponse";
 export type { PagedItemResponse } from "./model/net/response/PagedItemResponse";

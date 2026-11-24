@@ -2,6 +2,7 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { IUserImageDAO } from "../user/IUserImageDAO";
 import { userImageKey, userImagesBucket } from "./UserImageSupport";
+import { ApiError } from "../../../errors/ApiError";
 
 const s3Client = new S3Client({});
 const contentTypes: Record<string, string> = {
@@ -20,7 +21,7 @@ export class S3UserImageDAO implements IUserImageDAO {
   ): Promise<void> {
     const extension = fileExtension.replace(/^\./, "").toLowerCase();
     const contentType = contentTypes[extension];
-    if (!contentType) throw new Error("bad-request: Unsupported profile image type");
+    if (!contentType) throw new ApiError("INVALID_INPUT");
 
     await s3Client.send(
       new PutObjectCommand({
@@ -37,12 +38,12 @@ export class S3UserImageDAO implements IUserImageDAO {
     const response = await s3Client.send(
       new GetObjectCommand({ Bucket: userImagesBucket(), Key: userImageKey(alias) }),
     );
-    if (!response.Body) throw new Error("not-found: Profile image not found");
+    if (!response.Body) throw new ApiError("NOT_FOUND");
 
     const extension =
       response.Metadata?.fileextension ??
       Object.entries(contentTypes).find(([, value]) => value === response.ContentType)?.[0];
-    if (!extension) throw new Error("internal-server-error: Unknown profile image type");
+    if (!extension) throw new ApiError("INTERNAL_ERROR");
 
     const imageBytes = await response.Body.transformToByteArray();
     return [Buffer.from(imageBytes).toString("base64"), extension];

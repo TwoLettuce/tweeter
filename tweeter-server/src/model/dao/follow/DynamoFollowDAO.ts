@@ -2,6 +2,7 @@
 import { UserDto } from "tweeter-shared";
 import { TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { IFollowDAO } from "./IFollowDAO";
+import { ApiError } from "../../../errors/ApiError";
 import {
   DynamoDAO,
   dynamoClient,
@@ -128,7 +129,7 @@ export class DynamoFollowDAO extends DynamoDAO implements IFollowDAO {
     shouldFollow: boolean,
   ): Promise<[number, number]> {
     if (followerAlias === followeeAlias) {
-      throw new Error("bad-request: A user cannot follow themselves");
+      throw new ApiError("INVALID_INPUT");
     }
 
     const countDelta = shouldFollow ? 1 : -1;

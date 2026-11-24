@@ -2,6 +2,7 @@
 import { CredentialsDto, UserDto } from "tweeter-shared";
 import { TransactWriteCommand } from "@aws-sdk/lib-dynamodb";
 import { IUserDAO } from "./IUserDAO";
+import { ApiError } from "../../../errors/ApiError";
 import { IPasswordEncryptor } from "./IPasswordEncryptor";
 import { DynamoDAO, dynamoClient, tables } from "../dynamo/DynamoDAO";
 import { userImageUrl } from "../s3/UserImageSupport";
@@ -57,7 +58,7 @@ export class DynamoUserDAO extends DynamoDAO implements IUserDAO {
     } catch (error) {
       if ((error as { name: string }).name === "TransactionCanceledException") {
         if (await this.getUser(alias))
-          throw new Error("bad-request: Alias already taken");
+          throw new ApiError("ALIAS_TAKEN");
       }
       throw error;
     }

@@ -1,5 +1,7 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { IAuthDAO } from "../dao/auth/IAuthDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
+import { ApiError } from "../../errors/ApiError";
 
 export abstract class Service {
   private _authDAO: IAuthDAO;
@@ -14,7 +16,7 @@ export abstract class Service {
   protected async authenticate(token: string) {
     const authData = await this.authDAO.getAuth(token);
     if (authData == null) {
-      throw new Error("unauthorized: Not logged in");
+      throw new ApiError("SESSION_EXPIRED");
     } else {
       return authData;
     }

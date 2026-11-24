@@ -4,6 +4,7 @@ import { Service } from "./Service";
 import { IFollowDAO } from "../dao/follow/IFollowDAO";
 import { IUserDAO } from "../dao/user/IUserDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
+import { ApiError } from "../../errors/ApiError";
 
 export class FollowService extends Service {
   private followDAO: IFollowDAO;
@@ -46,7 +47,7 @@ export class FollowService extends Service {
 
     const followee = await this.userDAO.getUser(followeeAlias);
     if (followee == null) {
-      throw new Error("bad-request: followee alias does not exist");
+      throw new ApiError("NOT_FOUND");
     }
 
     return await this.followDAO.isFollower(followerAlias, followeeAlias);

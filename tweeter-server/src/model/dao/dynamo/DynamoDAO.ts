@@ -9,6 +9,7 @@ import {
   QueryCommandInput,
   QueryCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
+import { ApiError } from "../../../errors/ApiError";
 
 const baseClient = new DynamoDBClient({});
 export const dynamoClient = DynamoDBDocumentClient.from(baseClient, {
@@ -112,7 +113,7 @@ export abstract class DynamoDAO {
 
 export function requirePageSize(pageSize: number): number {
   if (!Number.isInteger(pageSize) || pageSize < 1) {
-    throw new Error("bad-request: pageSize must be a positive integer");
+    throw new ApiError("INVALID_INPUT");
   }
   return pageSize;
 }
