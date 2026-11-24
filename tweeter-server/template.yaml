@@ -541,7 +541,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Users
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: alias
           AttributeType: S
@@ -553,7 +556,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Auth
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: token
           AttributeType: S
@@ -568,7 +574,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Follows
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: followerAlias
           AttributeType: S
@@ -581,6 +590,9 @@ Resources:
           KeyType: RANGE
       GlobalSecondaryIndexes:
         - IndexName: ByFollowee
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
           KeySchema:
             - AttributeName: followeeAlias
               KeyType: HASH
@@ -593,7 +605,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: FollowCounts
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: alias
           AttributeType: S
@@ -605,7 +620,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Statuses
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: authorAlias
           AttributeType: S
@@ -621,7 +639,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Feeds
-      BillingMode: PAY_PER_REQUEST
+      BillingMode: PROVISIONED
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       AttributeDefinitions:
         - AttributeName: recipientAlias
           AttributeType: S

@@ -182,4 +182,10 @@
 
 - Tool: Codex
 - Task: Replace scrypt password hashing with bcrypt, define a password-encryptor interface, and adapt the bcrypt library to that interface for registration and login.
-- Review: TODO
+- Review: Code is good and it compiles after running npm install.
+
+## 2026-11-24: tweeter-server/template.yaml, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Set every active DynamoDB table in the SAM template to provisioned billing with one read capacity unit and one write capacity unit, including the follow GSI.
+- Review: Looks good! Changed all tables.
