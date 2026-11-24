@@ -13,6 +13,17 @@ Globals:
       - !Ref tweeterLayer
     Timeout: 30
     MemorySize: 128
+    Environment:
+      Variables:
+        USERS_TABLE: !Ref usersTable
+        AUTH_TABLE: !Ref authTable
+        FOLLOWS_TABLE: !Ref followsTable
+        FOLLOW_COUNTS_TABLE: !Ref followCountsTable
+        STATUSES_TABLE: !Ref statusesTable
+        FEEDS_TABLE: !Ref feedsTable
+        BY_FOLLOWEE_INDEX: ByFollowee
+        USER_IMAGES_BUCKET: !Ref userImagesBucket
+        USER_IMAGE_BASE_URL: !Sub "https://${userImagesDistribution.DomainName}"
 
 #
 # Reusable blocks of configuration. These are referenced throughout the template to avoid duplication.
@@ -525,6 +536,173 @@ Resources:
   #
   # DynamoDB Tables
   #
+
+  usersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Users
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: alias
+          AttributeType: S
+      KeySchema:
+        - AttributeName: alias
+          KeyType: HASH
+
+  authTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Auth
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: token
+          AttributeType: S
+      KeySchema:
+        - AttributeName: token
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+
+  followsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Follows
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: followerAlias
+          AttributeType: S
+        - AttributeName: followeeAlias
+          AttributeType: S
+      KeySchema:
+        - AttributeName: followerAlias
+          KeyType: HASH
+        - AttributeName: followeeAlias
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: ByFollowee
+          KeySchema:
+            - AttributeName: followeeAlias
+              KeyType: HASH
+            - AttributeName: followerAlias
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+  followCountsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: FollowCounts
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: alias
+          AttributeType: S
+      KeySchema:
+        - AttributeName: alias
+          KeyType: HASH
+
+  statusesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Statuses
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: authorAlias
+          AttributeType: S
+        - AttributeName: statusKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: authorAlias
+          KeyType: HASH
+        - AttributeName: statusKey
+          KeyType: RANGE
+
+  feedsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Feeds
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: recipientAlias
+          AttributeType: S
+        - AttributeName: statusKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: recipientAlias
+          KeyType: HASH
+        - AttributeName: statusKey
+          KeyType: RANGE
+
+  userImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  userImagesOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: tweeter-profile-images
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  userImagesDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Tweeter profile images
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: profileImagesBucket
+            DomainName: !GetAtt userImagesBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt userImagesOriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: profileImagesBucket
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: none
+
+  userImagesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref userImagesBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontReadProfileImages
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${userImagesBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${userImagesDistribution}"
 
   # visitTable: ##### TODO: Change "visitTable" to match the table name. This doesn't
   #   #####       need to be the actual table name, just a unique identifier.
