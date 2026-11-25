@@ -26,6 +26,7 @@ import {
   UserResponse,
 } from "tweeter-shared";
 import { ClientCommunicator } from "./ClientCommunicator";
+import { ApiClientError, isApiErrorResponse } from "./ApiClientError";
 
 export class ServerFacade {
   private clientCommunicator: ClientCommunicator;
@@ -37,21 +38,13 @@ export class ServerFacade {
   }
 
   public async postStatus(req: PostStatusRequest): Promise<void> {
-    await this.post<PostStatusRequest, TweeterResponse>(
-      req,
-      "/status",
-      "Failed to post status",
-    );
+    await this.post<PostStatusRequest, TweeterResponse>(req, "/status");
   }
 
   public async follow(
     req: FollowRequest,
   ): Promise<[followerCount: number, followeeCount: number]> {
-    const res = await this.post<FollowRequest, FollowResponse>(
-      req,
-      "/follow",
-      "Failed to follow user",
-    );
+    const res = await this.post<FollowRequest, FollowResponse>(req, "/follow");
     return [res.followerCount, res.followeeCount];
   }
 
@@ -61,7 +54,6 @@ export class ServerFacade {
     const res = await this.post<UnfollowRequest, FollowResponse>(
       req,
       "/unfollow",
-      "Failed to unfollow user",
     );
     return [res.followerCount, res.followeeCount];
   }
@@ -70,7 +62,6 @@ export class ServerFacade {
     const res = await this.post<CountRequest, CountResponse>(
       req,
       `/followeecount/${encodeURIComponent(req.alias)}`,
-      "Failed to get followee count",
     );
     return res.count;
   }
@@ -79,7 +70,6 @@ export class ServerFacade {
     const res = await this.post<CountRequest, CountResponse>(
       req,
       `/followercount/${encodeURIComponent(req.alias)}`,
-      "Failed to get follower count",
     );
     return res.count;
   }
@@ -88,7 +78,6 @@ export class ServerFacade {
     const res = await this.post<IsFollowerRequest, IsFollowerResponse>(
       req,
       `/isfollower/${encodeURIComponent(req.followerAlias)}/${encodeURIComponent(req.followeeAlias)}`,
-      "Failed to get follower status",
     );
     return res.isFollower;
   }
@@ -97,39 +86,25 @@ export class ServerFacade {
     const res = await this.post<UserRequest, UserResponse>(
       req,
       `/user/${encodeURIComponent(req.alias)}`,
-      "Failed to get user",
     );
     return res.user === null ? null : User.fromDto(res.user);
   }
 
   public async login(req: LoginRequest): Promise<[User, AuthToken]> {
-    try {
-      const res = await this.post<LoginRequest, LoginResponse>(
-        req,
-        "/login",
-        "Failed to log in",
-      );
-      return this.getAuthenticatedUser(res, "Login");
-    } catch (e) {
-      throw new Error("Incorrect alias or password!");
-    }
+    const res = await this.post<LoginRequest, LoginResponse>(req, "/login");
+    return this.getAuthenticatedUser(res);
   }
 
   public async register(req: RegisterRequest): Promise<[User, AuthToken]> {
     const res = await this.post<RegisterRequest, RegisterResponse>(
       req,
       "/register",
-      "Failed to register",
     );
-    return this.getAuthenticatedUser(res, "Register");
+    return this.getAuthenticatedUser(res);
   }
 
   public async logout(req: LogoutRequest): Promise<void> {
-    await this.post<LogoutRequest, TweeterResponse>(
-      req,
-      "/logout",
-      "Failed to log out",
-    );
+    await this.post<LogoutRequest, TweeterResponse>(req, "/logout");
   }
 
   public loadMoreFollowees(
@@ -159,11 +134,13 @@ export class ServerFacade {
   private async post<REQ extends TweeterRequest, RES extends TweeterResponse>(
     req: REQ,
     endpoint: string,
-    failureMessage: string,
   ): Promise<RES> {
     const res = await this.clientCommunicator.doPost<REQ, RES>(req, endpoint);
     if (!res.success) {
-      throw new Error(res.message ?? failureMessage);
+      if (isApiErrorResponse(res)) {
+        throw new ApiClientError(res.code);
+      }
+      throw new ApiClientError("INTERNAL_ERROR");
     }
     return res;
   }
@@ -176,12 +153,10 @@ export class ServerFacade {
     const res = await this.post<PagedItemRequest<DTO>, PagedItemResponse<DTO>>(
       req,
       `/${resource}/${encodeURIComponent(req.userAlias)}`,
-      `Failed to load ${resource}`,
     );
 
     if (res.items === null) {
-      const label = resource[0].toUpperCase() + resource.slice(1);
-      throw new Error(`${label} response is missing items`);
+      throw new ApiClientError("INVALID_RESPONSE");
     }
 
     return [res.items.map(fromDto), res.hasMore];
@@ -189,12 +164,9 @@ export class ServerFacade {
 
   private getAuthenticatedUser(
     res: LoginResponse | RegisterResponse,
-    operation: "Login" | "Register",
   ): [User, AuthToken] {
     if (res.user == null || res.authToken == null) {
-      throw new Error(
-        `${operation} response is missing the user or auth token`,
-      );
+      throw new ApiClientError("INVALID_RESPONSE");
     }
     return [User.fromDto(res.user), AuthToken.fromDto(res.authToken)];
   }

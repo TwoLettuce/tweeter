@@ -207,3 +207,15 @@
 - Tool: Codex
 - Task: Keep the follow/unfollow button disabled until the viewed user's follower status has arrived. Associate the result with the viewed alias so a response for another profile cannot enable the button.
 - Review: tested and verified
+
+## 2026-11-24: tweeter-shared/src/index.ts, tweeter-shared/src/model/net/response/ApiErrorResponse.ts (new file), tweeter-server/src/errors/ApiError.ts (new file), tweeter-server/src/handlers/withApiErrorHandling.ts (new file), tweeter-server/src/handlers/auth/LoginHandler.ts, tweeter-server/src/handlers/auth/LogoutHandler.ts, tweeter-server/src/handlers/auth/RegisterHandler.ts, tweeter-server/src/handlers/follow/FollowHandler.ts, tweeter-server/src/handlers/follow/GetFolloweeCountHandler.ts, tweeter-server/src/handlers/follow/GetFollowerCountHandler.ts, tweeter-server/src/handlers/follow/GetIsFollowerHandler.ts, tweeter-server/src/handlers/follow/UnfollowHandler.ts, tweeter-server/src/handlers/followees/GetFolloweesHandler.ts, tweeter-server/src/handlers/followers/GetFollowersHandler.ts, tweeter-server/src/handlers/status/GetFeedHandler.ts, tweeter-server/src/handlers/status/GetStoryHandler.ts, tweeter-server/src/handlers/status/PostStatusHandler.ts, tweeter-server/src/handlers/user/GetUserHandler.ts, tweeter-server/src/model/dao/dynamo/DynamoDAO.ts, tweeter-server/src/model/dao/follow/DynamoFollowDAO.ts, tweeter-server/src/model/dao/s3/S3UserImageDAO.ts, tweeter-server/src/model/dao/status/DynamoStatusDAO.ts, tweeter-server/src/model/dao/user/DynamoUserDAO.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/model/service/Service.ts, tweeter-server/src/model/service/UserService.ts, tweeter-server/template.yaml, tweeter-server/ENDPOINTS.md, tweeter-web/src/net/ApiClientError.ts (new file), tweeter-web/src/net/ClientCommunicator.ts, tweeter-web/src/net/ServerFacade.ts, tweeter-web/src/presenter/Presenter.ts, tweeter-web/src/presenter/authentication/AuthenticationPresenter.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Add shared public error codes and safe messages, normalize failures through a server handler boundary and API Gateway responses, and have the client surface normalized messages without exposing exception details.
+- Review: This change resulted in bugs. Currently searching for cause.
+
+## 2026-11-24: tweeter-server/template.yaml, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Remove the catch-all API Gateway integration response pattern that was overriding the default success response mapping and returning HTTP 500 for successful Lambda responses.
+- Review: TODO

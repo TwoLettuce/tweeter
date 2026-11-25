@@ -1,3 +1,4 @@
+// AI-assisted: see AI-ATTRIBUTION.md
 import { NavigateFunction } from "react-router-dom";
 import { User, AuthToken } from "tweeter-shared";
 import { Presenter, View } from "../Presenter";
@@ -33,9 +34,7 @@ export abstract class AuthenticationPresenter<
       this.view.updateUserInfo(user, user, authToken, rememberMe);
       navigationFunction(user);
     } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to ${operationDescription} because of exception: ${error}`,
-      );
+      this.view.displayErrorMessage(this.getUserFacingErrorMessage(error));
     }
   }
 

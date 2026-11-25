@@ -1,6 +1,7 @@
 // AI-assisted: see AI-ATTRIBUTION.md
 import { TweeterRequest, TweeterResponse } from "tweeter-shared";
 import { HTTPMethod } from "./HTTPMethod";
+import { ApiClientError, isApiErrorResponse } from "./ApiClientError";
 
 export class ClientCommunicator {
   private SERVER_URL: string;
@@ -57,29 +58,31 @@ export class ClientCommunicator {
       req ? JSON.stringify(req) : req,
     );
 
-    console.log(`Fetching '${url}' with method '${method}'`);
-
+    let resp: Response;
     try {
-      const resp: Response = await fetch(url, params);
+      resp = await fetch(url, params);
+    } catch {
+      throw new ApiClientError("NETWORK_ERROR");
+    }
 
-      if (resp.ok) {
-        // Be careful with the return type here. resp.json() returns Promise<any> which means there is no type checking on response.
-        const response: RES = await resp.json();
-        return response;
-      } else if (resp.status == 401) {
-        throw new Error("Not logged in!");
-      } else {
-        const error = await resp.json();
-        throw new Error(error.errorMessage);
-      }
-    } catch (error) {
-      console.error(error);
-      throw new Error(
-        `Client communicator ${params.method} failed:\n${
-          (error as Error).message
-        }`,
+    let response: unknown;
+    try {
+      response = await resp.json();
+    } catch {
+      throw new ApiClientError(
+        resp.ok ? "INVALID_RESPONSE" : "INTERNAL_ERROR",
       );
     }
+
+    if (!resp.ok) {
+      if (isApiErrorResponse(response)) {
+        throw new ApiClientError(response.code);
+      }
+      throw new ApiClientError("INTERNAL_ERROR");
+    }
+
+    // The response types share a base interface, but the JSON body is untyped.
+    return response as RES;
   }
 
   private getUrl(endpoint: string): string {

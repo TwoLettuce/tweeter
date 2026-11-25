@@ -1,3 +1,7 @@
+// AI-assisted: see AI-ATTRIBUTION.md
+import { API_ERROR_MESSAGES } from "tweeter-shared";
+import { ApiClientError } from "../net/ApiClientError";
+
 export interface View {
   displayErrorMessage: (message: string) => void;
 }
@@ -24,10 +28,14 @@ export abstract class Presenter<T extends View> {
     try {
       await operation();
     } catch (error) {
-      this._view.displayErrorMessage(
-        `Failed to ${operationDescription} because of exception: ${(error as Error).message}`,
-      );
+      this._view.displayErrorMessage(this.getUserFacingErrorMessage(error));
     }
+  }
+
+  protected getUserFacingErrorMessage(error: unknown): string {
+    return error instanceof ApiClientError
+      ? error.message
+      : API_ERROR_MESSAGES.INTERNAL_ERROR;
   }
 
   public get view() {
