@@ -85,6 +85,8 @@ export class FollowService extends Service {
   ): Promise<[followerCount: number, followeeCount: number]> {
     const authData = await this.authenticate(token);
     const follower = await this.userDAO.getUser(authData.alias);
-    return await this.followDAO.unfollow(follower!, userToUnfollow);
+    const counts = await this.followDAO.unfollow(follower!, userToUnfollow);
+    await this.statusDAO.removeFromFeed(follower!.alias, userToUnfollow.alias);
+    return counts;
   }
 }

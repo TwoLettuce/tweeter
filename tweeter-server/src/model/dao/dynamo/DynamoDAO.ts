@@ -109,6 +109,30 @@ export abstract class DynamoDAO {
       }
     }
   }
+
+  protected async batchDeleteItems(
+    tableName: string,
+    keys: Record<string, unknown>[],
+  ): Promise<void> {
+    for (let start = 0; start < keys.length; start += 25) {
+      let requestItems: Record<string, any> = {
+        [tableName]: keys
+          .slice(start, start + 25)
+          .map((Key) => ({ DeleteRequest: { Key } })),
+      };
+      let attempts = 0;
+      while (Object.keys(requestItems).length > 0) {
+        const response = await dynamoClient.send(
+          new BatchWriteCommand({ RequestItems: requestItems }),
+        );
+        requestItems = response.UnprocessedItems ?? {};
+        if (Object.keys(requestItems).length > 0) {
+          if (++attempts > 8) throw new Error("DynamoDB BatchWrite retry limit exceeded");
+          await new Promise((resolve) => setTimeout(resolve, 25 * 2 ** attempts));
+        }
+      }
+    }
+  }
 }
 
 export function requirePageSize(pageSize: number): number {

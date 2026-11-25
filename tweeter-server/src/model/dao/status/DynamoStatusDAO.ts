@@ -107,6 +107,37 @@ export class DynamoStatusDAO extends DynamoDAO implements IStatusDAO {
     } while (lastKey);
   }
 
+  public async removeFromFeed(
+    followerAlias: string,
+    followeeAlias: string,
+  ): Promise<void> {
+    let lastKey: Record<string, unknown> | undefined;
+    do {
+      const result = await this.queryItems<StatusItem>(
+        {
+          TableName: tables.feeds,
+          KeyConditionExpression: "recipientAlias = :recipientAlias",
+          FilterExpression: "authorAlias = :authorAlias",
+          ExpressionAttributeValues: {
+            ":recipientAlias": followerAlias,
+            ":authorAlias": followeeAlias,
+          },
+          ConsistentRead: true,
+          ...(lastKey ? { ExclusiveStartKey: lastKey } : {}),
+        },
+        100,
+      );
+      await this.batchDeleteItems(
+        tables.feeds,
+        result.items.map((status) => ({
+          recipientAlias: followerAlias,
+          statusKey: status.statusKey,
+        })),
+      );
+      lastKey = result.lastEvaluatedKey;
+    } while (lastKey);
+  }
+
   public async getFeed(
     alias: string,
     pageSize: number,

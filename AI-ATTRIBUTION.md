@@ -224,10 +224,16 @@
 
 - Tool: Codex
 - Task: Prevent concurrent authenticated requests from treating compare-and-set contention while refreshing the same session token as an expired session.
-- Review: TODO
+- Review: Error has not been reproduced. I consider it fixed.
 
 ## 2026-11-25: tweeter-server/src/model/dao/status/IStatusDAO.ts, tweeter-server/src/model/dao/status/DynamoStatusDAO.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
 
 - Tool: Codex
 - Task: Backfill a new follower's feed with all existing statuses from the followed user's story, using the existing feed key format so retries are idempotent.
+- Review: Tested!
+
+## 2026-11-25: tweeter-server/src/model/dao/dynamo/DynamoDAO.ts, tweeter-server/src/model/dao/status/IStatusDAO.ts, tweeter-server/src/model/dao/status/DynamoStatusDAO.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Remove feed entries authored by a user when their follower unfollows them, using paged queries and retryable batch deletes.
 - Review: TODO
