@@ -54,6 +54,25 @@ export class DynamoAuthDAO extends DynamoDAO implements IAuthDAO {
         if ((error as { name?: string }).name !== "ConditionalCheckFailedException") {
           throw error;
         }
+
+        // Another authenticated request may have refreshed this same token
+        // after our read. That request already extended the session, so treat
+        // an active latest record as valid instead of misreporting expiry.
+        const latestItem = await this.getItem<AuthItem>(tables.auth, { token });
+        if (!latestItem) return null;
+
+        const latestNow = Date.now();
+        if (
+          !Number.isFinite(latestItem.lastActivityAt) ||
+          latestNow - latestItem.lastActivityAt >= INACTIVITY_TIMEOUT_MS
+        ) {
+          return null;
+        }
+
+        return {
+          alias: latestItem.alias,
+          token: { token: latestItem.token, timestamp: latestItem.timestamp },
+        };
       }
     }
     return null;

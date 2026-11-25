@@ -97,7 +97,7 @@ Each status is stored as an individual item. Query `Statuses` by `authorAlias`, 
 
 When a user posts, query their followers and write one `Feeds` item per follower. Then `getFeed` queries by `recipientAlias` in descending `statusKey` order and returns a page. This makes feed reads a single-partition query rather than a runtime merge across followed users. Store enough data in each entry to return a `StatusDto` without querying every followed user's story. The denormalized author snapshot can be stale if profile data changes; stable image URLs and fetching current profiles during response assembly are alternatives if that matters.
 
-Feed fan-out can require many writes for an account with many followers. Design `postToFeeds` to batch writes and handle partial failures or retries; DynamoDB batch writes can leave unprocessed items that must be retried. Decide whether `follow` should backfill recent statuses from the new followee into the follower's feed. Without backfill, the follower sees only statuses posted after the follow.
+Feed fan-out can require many writes for an account with many followers. Design `postToFeeds` to batch writes and handle partial failures or retries; DynamoDB batch writes can leave unprocessed items that must be retried. When a follow is created, query every existing status from the followee's `Statuses` partition and write it to the new follower's `Feeds` partition. Use the same `statusKey` so the operation is idempotent and duplicate follow requests can safely repeat the backfill.
 
 ## Paging and DAO mapping
 

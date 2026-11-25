@@ -3,16 +3,19 @@ import { UserDto } from "tweeter-shared";
 import { Service } from "./Service";
 import { IFollowDAO } from "../dao/follow/IFollowDAO";
 import { IUserDAO } from "../dao/user/IUserDAO";
+import { IStatusDAO } from "../dao/status/IStatusDAO";
 import { IDAOFactory } from "../dao/factory/IDAOFactory";
 import { ApiError } from "../../errors/ApiError";
 
 export class FollowService extends Service {
   private followDAO: IFollowDAO;
   private userDAO: IUserDAO;
+  private statusDAO: IStatusDAO;
   public constructor(factory: IDAOFactory) {
     super(factory);
     this.followDAO = factory.getFollowDAO();
     this.userDAO = factory.getUserDAO();
+    this.statusDAO = factory.getStatusDAO();
   }
 
   public async loadMoreFollowees(
@@ -71,7 +74,9 @@ export class FollowService extends Service {
   ): Promise<[followerCount: number, followeeCount: number]> {
     const authData = await this.authenticate(token);
     const follower = await this.userDAO.getUser(authData.alias);
-    return await this.followDAO.follow(follower!, userToFollow);
+    const counts = await this.followDAO.follow(follower!, userToFollow);
+    await this.statusDAO.backfillFeed(follower!.alias, userToFollow.alias);
+    return counts;
   }
 
   public async unfollow(

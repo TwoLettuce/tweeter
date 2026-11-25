@@ -80,6 +80,33 @@ export class DynamoStatusDAO extends DynamoDAO implements IStatusDAO {
     } while (lastKey);
   }
 
+  public async backfillFeed(
+    followerAlias: string,
+    followeeAlias: string,
+  ): Promise<void> {
+    let lastKey: Record<string, unknown> | undefined;
+    do {
+      const result = await this.queryItems<StatusItem>(
+        {
+          TableName: tables.statuses,
+          KeyConditionExpression: "authorAlias = :alias",
+          ExpressionAttributeValues: { ":alias": followeeAlias },
+          ConsistentRead: true,
+          ...(lastKey ? { ExclusiveStartKey: lastKey } : {}),
+        },
+        100,
+      );
+      await this.batchPutItems(
+        tables.feeds,
+        result.items.map((status) => ({
+          ...status,
+          recipientAlias: followerAlias,
+        })),
+      );
+      lastKey = result.lastEvaluatedKey;
+    } while (lastKey);
+  }
+
   public async getFeed(
     alias: string,
     pageSize: number,

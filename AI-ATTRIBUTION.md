@@ -218,4 +218,16 @@
 
 - Tool: Codex
 - Task: Remove the catch-all API Gateway integration response pattern that was overriding the default success response mapping and returning HTTP 500 for successful Lambda responses.
+- Review: Tested and reviewed, fixed bug.
+
+## 2026-11-25: tweeter-server/src/model/dao/auth/DynamoAuthDAO.ts, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Prevent concurrent authenticated requests from treating compare-and-set contention while refreshing the same session token as an expired session.
+- Review: TODO
+
+## 2026-11-25: tweeter-server/src/model/dao/status/IStatusDAO.ts, tweeter-server/src/model/dao/status/DynamoStatusDAO.ts, tweeter-server/src/model/service/FollowService.ts, tweeter-server/src/model/dao/DATABASE.md, AI-ATTRIBUTION.md
+
+- Tool: Codex
+- Task: Backfill a new follower's feed with all existing statuses from the followed user's story, using the existing feed key format so retries are idempotent.
 - Review: TODO
