@@ -119,12 +119,6 @@ Resources:
             responseParameters: *commonCorsHeaders
             responseTemplates:
               application/json: *commonErrorResponseTemplate
-          ".*":
-            statusCode: 500
-            responseParameters: *commonCorsHeaders
-            responseTemplates:
-              application/json: >-
-                { "success": false, "code": "INTERNAL_ERROR", "message": "Something went wrong. Please try again." }
         x-common-swagger-responses: &commonSwaggerResponses
           "200":
             description: "OK"
